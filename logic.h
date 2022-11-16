@@ -3,6 +3,7 @@
 
 void getTitleScreen();
 void getCharCreationScreen();
-void selectJobClass(JobClass *sPlayerJob);
+void selectJobClass(JobClass *pPlayerJob);
+void getRoundTable(JobClass *pJob);
 
 #endif

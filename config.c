@@ -26,7 +26,7 @@ JobClass* initJobClasses(){
     @nLVL, nHP, nEND, nDEX, nSTR, nINT, nFTH - Int values to be assigned (>= 0)
     @strJobName - String name of the job (10 char)
 */
-void setJobStats(JobClass *sJob, int nLVL, int nHP, int nEND, int nDEX, int nSTR, int nINT, int nFTH, string15 strJobName){
+void setJobStats(JobClass *sJob, int nLVL, int nHP, int nEND, int nDEX, int nSTR, int nINT, int nFTH, string10 strJobName){
     sJob->nLevel = nLVL;     //Change struct variable value via pointer
     sJob->nHealth = nHP;
     sJob->nEndurance = nEND;

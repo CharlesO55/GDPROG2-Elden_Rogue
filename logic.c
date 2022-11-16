@@ -3,7 +3,7 @@
 
 
 void getTitleScreen(){
-	int nChoice = VALID;
+	int nChoice;
 	do {
 		printTitleScreen();
 
@@ -12,9 +12,10 @@ void getTitleScreen(){
 		switch(nChoice){
 			case 1:
 				getCharCreationScreen();
+				prompt(2);
 				break;
 			case 2:
-				printf("\nCONTINUE");
+				prompt(2);
 				break;
 			case 0:
 				prompt(0);
@@ -29,7 +30,8 @@ void getTitleScreen(){
 
 
 void getCharCreationScreen(){
-	int nChoice = VALID;
+	int nChoice;
+	int nValid = INVALID;
 	string25 strPlayerName = "";
 
 	//INIT A DEFAULT EMPTY JOB
@@ -40,37 +42,43 @@ void getCharCreationScreen(){
 	do {
 		printCharCreationScreen(strPlayerName, sPlayerJob.nLevel, sPlayerJob.strJob);
 		scanIntChoice(&nChoice, 0, 3);
-
 		switch(nChoice){
 			case 1:	//Enter name
 				printf("SPEAK THY NAME: ");
 				scanString(strPlayerName, PLAYER_NAME_MAX_CHARS);
 				break;
 			case 2:	//Select class
+				prompt(2);
 				selectJobClass(&sPlayerJob);
 				break;
 			case 3:	//Confirm
-				//go to game
+				if ((int)strlen(strPlayerName) && sPlayerJob.nLevel){
+					prompt(2);
+					getRoundTable(&sPlayerJob);
+					nValid = VALID;
+				}
+				else {
+					prompt(101);
+				}
 				break;
 			case 0: //Exit
+				//reset player job if needed
 				prompt(1);
 				return;
 			default:
 				prompt(102);
 		}
-	} while (!nChoice || nChoice != 3);	//Repeat until not confirmed or exited
+	} while (!nChoice || !nValid);	//Repeat until not exited
 }
 
 
-void selectJobClass(JobClass *sPlayerJob){
+void selectJobClass(JobClass *pPlayerJob){
 	int nChoice = VALID;
-	strcpy(sPlayerJob->strJob, "JOH");
-	sPlayerJob->nLevel = 1300;
 
 	JobClass *pJobList = initJobClasses();
 
 	do{
-		printJobSelectorScreen(sPlayerJob);
+		printJobSelectorScreen(pPlayerJob);
 		scanIntChoice(&nChoice, 0, TOTAL_CLASSES);
 
 		switch(nChoice){
@@ -80,14 +88,27 @@ void selectJobClass(JobClass *sPlayerJob){
 		case 4:
 		case 5:
 		case 6:
-			sPlayerJob = pJobList[nChoice-1];
+			setJobStats(pPlayerJob, 
+				pJobList[nChoice-1].nLevel, 
+				pJobList[nChoice-1].nHealth, 
+				pJobList[nChoice-1].nEndurance, 
+				pJobList[nChoice-1].nDexterity, 
+				pJobList[nChoice-1].nStrength, 
+				pJobList[nChoice-1].nIntelligence, 
+				pJobList[nChoice-1].nFaith, 
+				pJobList[nChoice-1].strJob);
 			break;
 		case 0: //Exit
 			prompt(1);
+			free(pJobList);
 			return;
 		default:
 			prompt(102);
 		}
-
 	} while (nChoice);
+}
+
+
+void getRoundTable(JobClass *pJob){
+	printRoundTableScreen(*pJob);
 }

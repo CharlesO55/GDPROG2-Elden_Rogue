@@ -10,6 +10,7 @@
 #define UNFOUND 0
 #define VALID 1
 #define INVALID 0
+#define EXIT 0
 
 void scanIntChoice(int *nChoice, int nMin, int nMax);
 void playerMovement(int* nAction);
