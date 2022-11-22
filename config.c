@@ -36,3 +36,15 @@ void setJobStats(JobClass *sJob, int nLVL, int nHP, int nEND, int nDEX, int nSTR
     sJob->nFaith = nFTH;
     strcpy(sJob->strJob, strJobName);
 }
+
+
+void setPlayerStats(Player* pPlay, string25 strNewName, int nNewRunes, int aNewShards[MAX_SHARDS], JobClass sNewJob){
+    strcpy(pPlay->strPlayerName, strNewName);
+    pPlay->nRunes = nNewRunes;
+    pPlay->sJob = sNewJob;
+
+    int i;
+    for (i = 0; i < MAX_SHARDS; i++){
+        pPlay->aShards[i] = aNewShards[i];
+    }
+}
