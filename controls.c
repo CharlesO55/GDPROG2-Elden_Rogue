@@ -8,13 +8,18 @@ void scanIntChoice(int *nChoice, int nMin, int nMax){
         printf("\n[INPUT]: ");
         scanf(" %s", strInput);
 
+        if(strInput[0] == KILL_SWITCH){prompt(0); exit(1);}
+
+
         if (strlen(strInput) == 1 && strInput[0]-48 >= nMin  && strInput[0]-48 <= nMax){    //If single input and is in int range
             nValid = VALID;
-            *nChoice = strInput[0] - 48;    //Convert from ascii char to int. Typecasting doesn't work \'_'/
+            *nChoice = strInput[0] - 48;
         } 
         else{
             prompt(100);
         }
+
+
     }
 }
 

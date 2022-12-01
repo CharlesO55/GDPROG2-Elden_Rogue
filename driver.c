@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "config.c"
+#include "structs.c"
 #include "prompt.c"
 #include "controls.c"
 #include "screen.c"

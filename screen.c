@@ -13,7 +13,7 @@ void printTitleScreen(){
 }
 
 
-void printCharCreationScreen(string25 strName, int nLevel, string25 strClass){
+void printCharCreationScreen(const string25 strName, const int nLevel, const string25 strClass){
 	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
 	printf("\n  ▮ CHARACTER CREATOR               ▮");
 	printf("\n  ▮ Name: "); printf("%s", strName); printSymbols(PLAYER_NAME_MAX_CHARS - (int)strlen(strName), SPACE_SYMBOL); printf(" ▮");
@@ -26,17 +26,17 @@ void printCharCreationScreen(string25 strName, int nLevel, string25 strClass){
 	printf("\n\t0. CANCEL");
 }
 
-void printJobSelectorScreen(JobClass *pJob){
+void printJobSelectorScreen(const JobClass sJob){
 	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
 	printf("\n  ▮ JOB CLASS SELECTOR              ▮");
-	printf("\n  ▮    Job Class : %s", pJob->strJob);			   printSymbols(BARS_WIDTH - 19 - (int)strlen(pJob->strJob), SPACE_SYMBOL); printf(" ▮");
-	printf("\n  ▮        Level : %d", pJob->nLevel); 		   printSymbols(BARS_WIDTH - 19 - calcDigits(pJob->nLevel), SPACE_SYMBOL); printf(" ▮");
-	printf("\n  ▮       Health : %d", pJob->nHealth);	       printSymbols(BARS_WIDTH - 19 - calcDigits(pJob->nHealth), SPACE_SYMBOL); printf(" ▮");
-	printf("\n  ▮    Endurance : %d", pJob->nEndurance);    printSymbols(BARS_WIDTH - 19 - calcDigits(pJob->nEndurance), SPACE_SYMBOL); printf(" ▮");
-	printf("\n  ▮    Dexterity : %d", pJob->nDexterity);    printSymbols(BARS_WIDTH - 19 - calcDigits(pJob->nDexterity), SPACE_SYMBOL); printf(" ▮");
-	printf("\n  ▮     Strength : %d", pJob->nStrength);	   printSymbols(BARS_WIDTH - 19 - calcDigits(pJob->nStrength), SPACE_SYMBOL); printf(" ▮");
-	printf("\n  ▮ Intelligence : %d", pJob->nIntelligence); printSymbols(BARS_WIDTH - 19 - calcDigits(pJob->nIntelligence), SPACE_SYMBOL); printf(" ▮");
-	printf("\n  ▮        Faith : %d", pJob->nFaith);		   printSymbols(BARS_WIDTH - 19 - calcDigits(pJob->nFaith), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮    Job Class : %s", sJob.strJob);			   printSymbols(BARS_WIDTH - 19 - (int)strlen(sJob.strJob), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮        Level : %d", sJob.nLevel); 		   printSymbols(BARS_WIDTH - 19 - calcDigits(sJob.nLevel), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮       Health : %d", sJob.nHealth);	       printSymbols(BARS_WIDTH - 19 - calcDigits(sJob.nHealth), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮    Endurance : %d", sJob.nEndurance);    printSymbols(BARS_WIDTH - 19 - calcDigits(sJob.nEndurance), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮    Dexterity : %d", sJob.nDexterity);    printSymbols(BARS_WIDTH - 19 - calcDigits(sJob.nDexterity), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮     Strength : %d", sJob.nStrength);	   printSymbols(BARS_WIDTH - 19 - calcDigits(sJob.nStrength), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮ Intelligence : %d", sJob.nIntelligence); printSymbols(BARS_WIDTH - 19 - calcDigits(sJob.nIntelligence), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮        Faith : %d", sJob.nFaith);		   printSymbols(BARS_WIDTH - 19 - calcDigits(sJob.nFaith), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
 
 	printf("\nSELECT JOB CLASS: ");
@@ -62,7 +62,7 @@ int calcDigits(int nNum){
 	return nDigit;
 }
 
-void printSymbols(int nAmount, int nSymbol){
+void printSymbols(const int nAmount, const int nSymbol){
 	int i;
 	for (i = 0; i < nAmount; i++){
 		switch(nSymbol){
@@ -86,7 +86,7 @@ void printSymbols(int nAmount, int nSymbol){
 
 
 
-void printRoundTableScreen(Player sPlayer){
+void printRoundTableScreen(const Player sPlayer){
 	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
 	printf("\n  ▮ ROUNDTABLE HOLD"); printSymbols(BARS_WIDTH - (int)strlen("ROUNDTABLE HOLD") - 4, SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮ Name: %s", sPlayer.strPlayerName); printSymbols(BARS_WIDTH - (int)strlen(sPlayer.strPlayerName) - 4 - 6, SPACE_SYMBOL); printf(" ▮");
@@ -106,7 +106,7 @@ void printRoundTableScreen(Player sPlayer){
 }
 
 
-	void printShards(int aShards[MAX_SHARDS]){
+	void printShards(const int aShards[MAX_SHARDS]){
 		int i;
 		for (i = 0; i < MAX_SHARDS; i++){
 			if (aShards[i] != 0)	//Active
@@ -118,12 +118,12 @@ void printRoundTableScreen(Player sPlayer){
 	}
 
 
-void printLevelingScreen(Player sPlayer, int nRuneCost){
+void printLevelingScreen(const Player sPlayer, const int nRuneCost){
 	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
 	printf("\n  ▮ LEVEL UP"); printSymbols(BARS_WIDTH - (int)strlen("▮ LEVEL UP"), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮ Level: %d", sPlayer.sJob.nLevel); printSymbols(BARS_WIDTH - (int)strlen("▮ Level: ") - calcDigits(sPlayer.sJob.nLevel), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮ Runes: %d", sPlayer.nRunes); printSymbols(7 - calcDigits(sPlayer.nRunes), SPACE_SYMBOL); 
-		printf(" Rune Cost: %d", nRuneCost); printSymbols(5 - calcDigits(nRuneCost), SPACE_SYMBOL); printf(" ▮");
+		if(checkLevelUp(10, nRuneCost, sPlayer.nRunes) == INVALID){printf("\033[0;31m");} printf(" Rune Cost: %d", nRuneCost); printf("\033[0m"); printSymbols(5 - calcDigits(nRuneCost), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮       Health : %d", sPlayer.sJob.nHealth);	       printSymbols(BARS_WIDTH - (int)strlen("▮       Health : ") - calcDigits(sPlayer.sJob.nHealth), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮    Endurance : %d", sPlayer.sJob.nEndurance);    printSymbols(BARS_WIDTH - (int)strlen("▮    Endurance : ") - calcDigits(sPlayer.sJob.nEndurance), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮    Dexterity : %d", sPlayer.sJob.nDexterity);    printSymbols(BARS_WIDTH - (int)strlen("▮    Dexterity : ") - calcDigits(sPlayer.sJob.nDexterity), SPACE_SYMBOL); printf(" ▮");
@@ -140,5 +140,24 @@ void printLevelingScreen(Player sPlayer, int nRuneCost){
 	printf("\n\t4. LEVEL STRENGTH");
 	printf("\n\t5. LEVEL INTELLIGENCE");
 	printf("\n\t6. LEVEL FAITH");
+	printf("\n\t0. RETURN TO ROUNDTABLE HOLD");
+}
+
+
+
+void printInventoryScreen(int* pInventory, int nPage){
+
+}
+
+void printShopOpening(const string25 strName, const int nRunes){
+	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
+	printf("\n  ▮ SHOP MENU"); printSymbols(BARS_WIDTH - (int)strlen("▮ SHOP MENU"), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮ Hello, %s", strName); printSymbols(BARS_WIDTH - (int)strlen("▮ Hello,") - strlen(strName), SPACE_SYMBOL); printf("▮");
+	printf("\n  ▮ Runes: %d", nRunes); printSymbols(BARS_WIDTH - (int)strlen("▮ Runes: ") - calcDigits(nRunes), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
+	
+	printf("\n\nSELECT ACTION:");
+	printf("\n\t1. BUY WEAPONS");
+	printf("\n\t2. SELL WEAPONS");
 	printf("\n\t0. RETURN TO ROUNDTABLE HOLD");
 }

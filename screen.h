@@ -5,18 +5,22 @@
 
 #define SPACE_SYMBOL 0
 #define BAR_SYMBOL 1
-//#define SHARD_SYMBOL 2
-//#define EMPTY_SHARD_SYMBOL 3
+
+#include "navigation.h"
 
 void printTitleScreen();
-void printCharCreationScreen(string25 strName, int nLevel, string25 strClass);
-void printJobSelectorScreen(JobClass *sJob);
+void printCharCreationScreen(const string25 strName, const int nLevel, const string25 strClass);
+void printJobSelectorScreen(const JobClass sJob);
 int calcDigits(int nNum);
-void printSpaces(int nSpaces);
-void printSymbols(int nAmount, int nSymbol);
-void printRoundTableScreen(Player sPlayer);
-	void printShards(int aShards[MAX_SHARDS]);
+void printSpaces(const int nSpaces);
+void printSymbols(const int nAmount, const int nSymbol);
+void printRoundTableScreen(const Player sPlayer);
+	void printShards(const int aShards[MAX_SHARDS]);
 
-	void printLevelingScreen(Player sPlayer, int nRuneCost);
+	void printLevelingScreen(const Player sPlayer, const int nRuneCost);
 
+
+	void printInventoryScreen(int* pInventory, int nPage);
+
+	void printShopOpening(const string25 strName, const int nRunes);
 #endif

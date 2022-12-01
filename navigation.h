@@ -6,8 +6,10 @@ void getCharCreationScreen(Player* pPlayer);
 void selectJobClass(JobClass *pPlayerJob);
 void getRoundTable(Player* pPlayer);
 void getLevelingMenu(Player* pPlayer);
-	int calcRuneCost(int nLevel);
-	void levelUp(Player* pPlayer, int nRuneCost, int nChoice);
-		int checkLevelUp(int nStatLevel, int nRuneCost, int nRunes);
+	int calcRuneCost(const int nLevel);
+	void levelUp(Player* pPlayer, const int nRuneCost, const int nChoice);
+		int checkLevelUp(const int nStatLevel, const int nRuneCost, const int nRunes);
 
+void getInventoryMenu(int* pInventory);
+void getShopMenu(Player* pPlayer);
 #endif

@@ -1,4 +1,7 @@
 void prompt(int nCode){
+	if (nCode >= 0 && nCode < 100){ printf("\033[0;32m");}
+	else if (nCode >= 100 && nCode < 200){printf("\033[0;31m");}	//Switch to red font. Error prompts
+
 	switch(nCode){
 		case 0:
 			printf("\n[SYSTEM]: Closing program...");
@@ -30,4 +33,5 @@ void prompt(int nCode){
 		default:
 			printf("\n[ERROR]: Not in prompt options.");
 	}
+	printf("\033[0m");
 }

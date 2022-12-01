@@ -10,7 +10,10 @@
 #define UNFOUND 0
 #define VALID 1
 #define INVALID 0
+#define INVALID2 -1
 #define EXIT 0
+
+#define KILL_SWITCH 96	// ` symbol
 
 void scanIntChoice(int *nChoice, int nMin, int nMax);
 void playerMovement(int* nAction);
