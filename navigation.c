@@ -60,8 +60,8 @@ void getCharCreationScreen(Player* pPlayer){
 				if ((int)strlen(strTempName) && sTempJob.nLevel){
 					//FINALIZE PLAYER STATS
 					int aEmptyShards[MAX_SHARDS] = {0, 0, 0, 0, 0, 0};
-					setPlayerStats(pPlayer, strTempName, 0, aEmptyShards, sTempJob);
-
+					setPlayerStats(pPlayer, strTempName, 1000, aEmptyShards, sTempJob);
+					repackageStats(pPlayer);
 					prompt(2);
 					getRoundTable(pPlayer);
 					nValid = VALID;		//Allow the loop to end
@@ -158,8 +158,39 @@ void getRoundTable(Player* pPlayer){
 
 void getLevelingMenu(Player* pPlayer){
 	int nChoice;
+	int nRuneCost;
+
 	do {
-		//printLevelingScreen();
+		nRuneCost = calcRuneCost((pPlayer->sJob.nLevel));
+
+		printLevelingScreen(*pPlayer, nRuneCost);
 		scanIntChoice(&nChoice, 0, 6);
+
+		if(nChoice != 0){
+			levelUp(pPlayer, nRuneCost, nChoice);
+		}
+		
 	} while (nChoice);
+	prompt(1);
 }
+
+	int calcRuneCost(int nLevel){
+		return (nLevel * 100 / 2);
+	}
+
+	void levelUp(Player* pPlayer, int nRuneCost, int nChoice){
+		if (checkLevelUp(*(pPlayer->sJob.pStats[nChoice]), nRuneCost, pPlayer->nRunes)) {
+			pPlayer->nRunes -= nRuneCost;
+			*(pPlayer->sJob.pStats[0]) += 1;
+			*(pPlayer->sJob.pStats[nChoice]) += 1;
+			prompt(3);
+		}
+	}
+
+		int checkLevelUp(int nStatLevel, int nRuneCost, int nRunes){
+			if (nRunes < nRuneCost){ prompt(103); return INVALID; }
+
+			if(nStatLevel >= 50){ prompt(104); return INVALID; }
+
+			return VALID;
+		}

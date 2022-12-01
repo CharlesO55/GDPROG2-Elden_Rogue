@@ -48,3 +48,13 @@ void setPlayerStats(Player* pPlay, string25 strNewName, int nNewRunes, int aNewS
         pPlay->aShards[i] = aNewShards[i];
     }
 }
+
+void repackageStats(Player* pPlayer){
+    pPlayer->sJob.pStats[0] = &(pPlayer->sJob.nLevel);
+    pPlayer->sJob.pStats[1] = &(pPlayer->sJob.nHealth);
+    pPlayer->sJob.pStats[2] = &(pPlayer->sJob.nEndurance);
+    pPlayer->sJob.pStats[3] = &(pPlayer->sJob.nDexterity);
+    pPlayer->sJob.pStats[4] = &(pPlayer->sJob.nStrength);
+    pPlayer->sJob.pStats[5] = &(pPlayer->sJob.nIntelligence);
+    pPlayer->sJob.pStats[6] = &(pPlayer->sJob.nFaith);
+}

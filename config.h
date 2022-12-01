@@ -11,11 +11,14 @@ typedef char string10[11];
 #define TOTAL_WEAPONS_TYPES_CHOICES 4
 
 #define MAX_SHARDS 6
+#define MAX_LEVEL 50
+#define NUMBER_OF_STATS 6
 
 typedef struct JobTag{
     string10 strJob;
     int nLevel;
     int nHealth, nEndurance, nDexterity, nStrength, nIntelligence, nFaith;
+    int* pStats[NUMBER_OF_STATS];
 } JobClass;
 
 JobClass* initJobClasses();

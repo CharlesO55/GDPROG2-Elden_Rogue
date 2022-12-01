@@ -22,7 +22,7 @@ void printCharCreationScreen(string25 strName, int nLevel, string25 strClass){
 
 	printf("\n\t1. ENTER NAME");
 	printf("\n\t2. SELECT CLASS");
-	printf("\n\t3. CONFIRM");
+	printf("\n\t3. CONFIRM CHARACTER");
 	printf("\n\t0. CANCEL");
 }
 
@@ -39,14 +39,14 @@ void printJobSelectorScreen(JobClass *pJob){
 	printf("\n  ▮        Faith : %d", pJob->nFaith);		   printSymbols(BARS_WIDTH - 19 - calcDigits(pJob->nFaith), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
 
-	printf("\n\tSELECT JOB CLASS: ");
-	printf("\n\t\t1. VAGABDOND");
-	printf("\n\t\t2. SAMURAI");
-	printf("\n\t\t3. WARRIOR");
-	printf("\n\t\t4. HERO");
-	printf("\n\t\t5. ASTROLOGER");
-	printf("\n\t\t6. PROPHET");
-	printf("\n\t0. RETURN TO CREATOR");
+	printf("\nSELECT JOB CLASS: ");
+	printf("\n\t1. VAGABDOND");
+	printf("\n\t2. SAMURAI");
+	printf("\n\t3. WARRIOR");
+	printf("\n\t4. HERO");
+	printf("\n\t5. ASTROLOGER");
+	printf("\n\t6. PROPHET");
+	printf("\n\t0. CONFIRM CLASS");
 }
 
 int calcDigits(int nNum){
@@ -102,17 +102,43 @@ void printRoundTableScreen(Player sPlayer){
 	printf("\n\t3. INVENTORY");
 	printf("\n\t4. SHOP");
 	printf("\n\t5. SAVE");
-	printf("\n\t0. QUIT GAME");
+	printf("\n\t0. QUIT TO TITLE");
 }
 
 
-void printShards(int aShards[MAX_SHARDS]){
-	int i;
-	for (i = 0; i < MAX_SHARDS; i++){
-		if (aShards[i] != 0)	//Active
-			printf("▲");
-		else{
-			printf("△");
+	void printShards(int aShards[MAX_SHARDS]){
+		int i;
+		for (i = 0; i < MAX_SHARDS; i++){
+			if (aShards[i] != 0)	//Active
+				printf("▲");
+			else{
+				printf("△");
+			}
 		}
 	}
+
+
+void printLevelingScreen(Player sPlayer, int nRuneCost){
+	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
+	printf("\n  ▮ LEVEL UP"); printSymbols(BARS_WIDTH - (int)strlen("▮ LEVEL UP"), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮ Level: %d", sPlayer.sJob.nLevel); printSymbols(BARS_WIDTH - (int)strlen("▮ Level: ") - calcDigits(sPlayer.sJob.nLevel), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮ Runes: %d", sPlayer.nRunes); printSymbols(7 - calcDigits(sPlayer.nRunes), SPACE_SYMBOL); 
+		printf(" Rune Cost: %d", nRuneCost); printSymbols(5 - calcDigits(nRuneCost), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮       Health : %d", sPlayer.sJob.nHealth);	       printSymbols(BARS_WIDTH - (int)strlen("▮       Health : ") - calcDigits(sPlayer.sJob.nHealth), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮    Endurance : %d", sPlayer.sJob.nEndurance);    printSymbols(BARS_WIDTH - (int)strlen("▮    Endurance : ") - calcDigits(sPlayer.sJob.nEndurance), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮    Dexterity : %d", sPlayer.sJob.nDexterity);    printSymbols(BARS_WIDTH - (int)strlen("▮    Dexterity : ") - calcDigits(sPlayer.sJob.nDexterity), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮     Strength : %d", sPlayer.sJob.nStrength);	   printSymbols(BARS_WIDTH - (int)strlen("▮     Strength : ") - calcDigits(sPlayer.sJob.nStrength), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮ Intelligence : %d", sPlayer.sJob.nIntelligence); printSymbols(BARS_WIDTH - (int)strlen("▮ Intelligence : ") - calcDigits(sPlayer.sJob.nIntelligence), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮        Faith : %d", sPlayer.sJob.nFaith);		   printSymbols(BARS_WIDTH - (int)strlen("▮        Faith : ") - calcDigits(sPlayer.sJob.nFaith), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
+	
+
+	printf("\n\nSELECT ACTION:");
+	printf("\n\t1. LEVEL HEALTH");
+	printf("\n\t2. LEVEL ENDURANCE");
+	printf("\n\t3. LEVEL DEXTERITY");
+	printf("\n\t4. LEVEL STRENGTH");
+	printf("\n\t5. LEVEL INTELLIGENCE");
+	printf("\n\t6. LEVEL FAITH");
+	printf("\n\t0. RETURN TO ROUNDTABLE HOLD");
 }

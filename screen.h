@@ -15,6 +15,8 @@ int calcDigits(int nNum);
 void printSpaces(int nSpaces);
 void printSymbols(int nAmount, int nSymbol);
 void printRoundTableScreen(Player sPlayer);
-void printShards(int aShards[MAX_SHARDS]);
+	void printShards(int aShards[MAX_SHARDS]);
+
+	void printLevelingScreen(Player sPlayer, int nRuneCost);
 
 #endif
