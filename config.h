@@ -9,13 +9,26 @@
 #define TOTAL_CLASSES 6
 #define TOTAL_WEAPONS_TYPES 6
 #define TOTAL_WEAPONS_TYPES_CHOICES 4
+#define WEAPON_ICON_WIDTH 12
 
 
-
-
+typedef char stringMax[100+1];
 typedef char string25[PLAYER_NAME_MAX_CHARS+1];
 typedef char string10[11];
 
+#define RED 		"\e[0;31m"
+#define GREEN 		"\e[0;32m"
+#define BLUE 		"\e[1;34m"	
+#define UWHITE 		"\e[4;37m"
+#define COLOR_RESET "\e[0m"
+
+
+#define SWORD 1
+#define KATANA 2
+#define WHIP 3
+#define GREATSWORD 4
+#define STAFF 5
+#define SEAL 6
 
 //CLASS INIT STATS
 string10 CONFIG_JobName[TOTAL_CLASSES] = {
@@ -62,6 +75,7 @@ int CONFIG_WeaponDexterityReq[TOTAL_WEAPONS_TYPES][TOTAL_WEAPONS_TYPES_CHOICES] 
 };
 
 int CONFIG_WeaponStats[TOTAL_WEAPONS_TYPES][TOTAL_WEAPONS_TYPES_CHOICES][NUMBER_OF_STATS] = {
+		//HP, END, DXT, STR, INT, FTH
 	{	{0, 15, 0, 15, 15, 15},	{10, 25, 0, 35, 35, 35}, {20, 35, 0, 40, 40, 40}, {30, 45, 0, 55, 55, 55}	},	//Swords
 	{	{20, 35, 0, 30, 0, 0},	{30, 40, 0, 45, 0, 0},	 {40, 45, 0, 60, 0, 0},	  {50, 50, 0, 75, 0, 0}  	},	//Katana
 	{	{15, 60, 0, 20, 0, 0},	{20, 70, 0, 40, 10, 0},	 {30, 80, 0, 50, 0, 40},  {35, 90, 0, 55, 20, 20}	},	//Whip
@@ -70,4 +84,22 @@ int CONFIG_WeaponStats[TOTAL_WEAPONS_TYPES][TOTAL_WEAPONS_TYPES_CHOICES][NUMBER_
 	{	{10, 45, 0, 0, 15, 20}, {15, 50, 0, 0, 35, 40},	 {20, 55, 0, 0, 65, 65},  {25, 60, 0, 0, 75, 80}	}	//Seals
 };
 
+
+string25 CONFIG_ShopDialogue[] = {
+	"How's the weather today?",
+	"More wares comin' soon.",
+	"Fancy yeself a blade?",
+	"Oh, it's you again.",
+	"٭(•﹏•)٭" ,
+	"(˵¯͒〰¯͒˵)",
+	"╰(▔∀▔)╯",
+	"(￣个￣)",
+	"(◕ っ ◕✿)",
+	"ᕙ(‾̀◡‾́)ᕗ"
+};
+
+
+//FUNCTIONS
+void startUp();
+int generateRNG(int nMin, int nMax);
 #endif

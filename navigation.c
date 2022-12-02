@@ -141,7 +141,7 @@ void getRoundTable(Player* pPlayer){
 			break;
 		case 4:	//Shop
 			prompt(2);
-			getShopMenu(pPlayer);
+			getShopOpen(pPlayer);
 			break;
 		case 5:	//Save
 			prompt(2);
@@ -234,7 +234,7 @@ void getInventoryMenu(int* pInventory){
 }
 
 
-void getShopMenu(Player* pPlayer){
+void getShopOpen(Player* pPlayer){
 	int nChoice;
 	Weapon* pAllWeapons = getAllWeapons();
 	do{
@@ -244,6 +244,7 @@ void getShopMenu(Player* pPlayer){
 		switch(nChoice){
 			case 1:
 				//Buy weapons
+				getShopBuyMenu(pPlayer, pAllWeapons);
 				break;
 			case 2:
 				//Sell weapons
@@ -257,3 +258,24 @@ void getShopMenu(Player* pPlayer){
 	} while(nChoice);
 	free(pAllWeapons);
 }
+
+	void getShopBuyMenu(Player* pPlayer, Weapon* pAllWeapons){
+		int nChoice;
+		do{
+			printShopBuyScreen(pPlayer->nRunes);
+			scanIntChoice(&nChoice, 0, TOTAL_WEAPONS_TYPES);
+			if(nChoice){
+				getShopBuyWeapons(pAllWeapons+((nChoice-1)*TOTAL_WEAPONS_TYPES_CHOICES), nChoice);
+			}
+		} while(nChoice);
+		prompt(1);
+	}
+
+		void getShopBuyWeapons(Weapon aWeapons[], const int nWeaponType){
+			int nChoice;
+			do{
+				printShopBuyWeapons(aWeapons, nWeaponType);
+				scanIntChoice(&nChoice, 0, TOTAL_WEAPONS_TYPES_CHOICES);
+			}while(nChoice);
+			prompt(1);
+		}

@@ -2,9 +2,9 @@
 
 void printTitleScreen(){
 	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
-	printf("\n  ▮                                 ▮");
-	printf("\n  ▮          ELDEN   ROGUE          ▮");
-	printf("\n  ▮                                 ▮");
+	printf("\n  ▮"); printSymbols(BARS_WIDTH - 2, SPACE_SYMBOL); printf("▮");
+	printf("\n  ▮          ELDEN   ROGUE"); printSymbols(BARS_WIDTH - 2 - (int)strlen("          ELDEN   ROGUE"), SPACE_SYMBOL); printf("▮");
+	printf("\n  ▮"); printSymbols(BARS_WIDTH - 2, SPACE_SYMBOL); printf("▮");
 	printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
 
 	printf("\n\t1. START");
@@ -15,7 +15,7 @@ void printTitleScreen(){
 
 void printCharCreationScreen(const string25 strName, const int nLevel, const string25 strClass){
 	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
-	printf("\n  ▮ CHARACTER CREATOR               ▮");
+	printHeader("CHARACTER CREATOR");
 	printf("\n  ▮ Name: "); printf("%s", strName); printSymbols(PLAYER_NAME_MAX_CHARS - (int)strlen(strName), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮ Level: "); printf("%d", nLevel); printSymbols(3- calcDigits(nLevel), SPACE_SYMBOL); printf("  Class: ");  printf("%s", strClass); printSymbols(13 - (int)strlen(strClass), SPACE_SYMBOL); printf("▮");
 	printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
@@ -28,7 +28,7 @@ void printCharCreationScreen(const string25 strName, const int nLevel, const str
 
 void printJobSelectorScreen(const JobClass sJob){
 	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
-	printf("\n  ▮ JOB CLASS SELECTOR              ▮");
+	printHeader("JOB CLASS SELECTOR");
 	printf("\n  ▮    Job Class : %s", sJob.strJob);			   printSymbols(BARS_WIDTH - 19 - (int)strlen(sJob.strJob), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮        Level : %d", sJob.nLevel); 		   printSymbols(BARS_WIDTH - 19 - calcDigits(sJob.nLevel), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮       Health : %d", sJob.nHealth);	       printSymbols(BARS_WIDTH - 19 - calcDigits(sJob.nHealth), SPACE_SYMBOL); printf(" ▮");
@@ -88,7 +88,7 @@ void printSymbols(const int nAmount, const int nSymbol){
 
 void printRoundTableScreen(const Player sPlayer){
 	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
-	printf("\n  ▮ ROUNDTABLE HOLD"); printSymbols(BARS_WIDTH - (int)strlen("ROUNDTABLE HOLD") - 4, SPACE_SYMBOL); printf(" ▮");
+	printHeader("ROUNDTABLE HOLD");
 	printf("\n  ▮ Name: %s", sPlayer.strPlayerName); printSymbols(BARS_WIDTH - (int)strlen(sPlayer.strPlayerName) - 4 - 6, SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮ Level: %d", sPlayer.sJob.nLevel); printSymbols(7 - calcDigits(sPlayer.sJob.nLevel), SPACE_SYMBOL); 
 		printf("Class: %s", sPlayer.sJob.strJob);	 printSymbols(BARS_WIDTH - 25 - (int)strlen(sPlayer.sJob.strJob), SPACE_SYMBOL); printf(" ▮");
@@ -120,7 +120,7 @@ void printRoundTableScreen(const Player sPlayer){
 
 void printLevelingScreen(const Player sPlayer, const int nRuneCost){
 	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
-	printf("\n  ▮ LEVEL UP"); printSymbols(BARS_WIDTH - (int)strlen("▮ LEVEL UP"), SPACE_SYMBOL); printf(" ▮");
+	printHeader("LEVEL UP");
 	printf("\n  ▮ Level: %d", sPlayer.sJob.nLevel); printSymbols(BARS_WIDTH - (int)strlen("▮ Level: ") - calcDigits(sPlayer.sJob.nLevel), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮ Runes: %d", sPlayer.nRunes); printSymbols(7 - calcDigits(sPlayer.nRunes), SPACE_SYMBOL); 
 		if(checkLevelUp(10, nRuneCost, sPlayer.nRunes) == INVALID){printf("\033[0;31m");} printf(" Rune Cost: %d", nRuneCost); printf("\033[0m"); printSymbols(5 - calcDigits(nRuneCost), SPACE_SYMBOL); printf(" ▮");
@@ -151,7 +151,7 @@ void printInventoryScreen(int* pInventory, int nPage){
 
 void printShopOpening(const string25 strName, const int nRunes){
 	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
-	printf("\n  ▮ SHOP MENU"); printSymbols(BARS_WIDTH - (int)strlen("▮ SHOP MENU"), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮ "); printf(UWHITE); printf("SHOP MENU"); printf(COLOR_RESET); printSymbols(BARS_WIDTH - (int)strlen("▮ SHOP MENU"), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮ Hello, %s", strName); printSymbols(BARS_WIDTH - (int)strlen("▮ Hello,") - strlen(strName), SPACE_SYMBOL); printf("▮");
 	printf("\n  ▮ Runes: %d", nRunes); printSymbols(BARS_WIDTH - (int)strlen("▮ Runes: ") - calcDigits(nRunes), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
@@ -160,4 +160,107 @@ void printShopOpening(const string25 strName, const int nRunes){
 	printf("\n\t1. BUY WEAPONS");
 	printf("\n\t2. SELL WEAPONS");
 	printf("\n\t0. RETURN TO ROUNDTABLE HOLD");
+}
+	
+	void printShopBuyScreen(const int nRunes){
+		stringMax strDialogue;
+		strcpy(strDialogue, CONFIG_ShopDialogue[generateRNG(0, (sizeof(CONFIG_ShopDialogue) / sizeof(string25)) - 1)]);
+
+		printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
+		printHeader("BUY WEAPONS");
+		printf("\n  ▮ Runes: %d", nRunes); printSymbols(BARS_WIDTH - (int)strlen("▮ Runes: ") - calcDigits(nRunes), SPACE_SYMBOL); printf(" ▮");
+		printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
+		printf(BLUE); printf("\n[SHOPKEEPER]: %s", strDialogue); printf(COLOR_RESET);
+		
+		printf("\n\nWHA'CHA BUYING?");
+		printf("\n\t1. BUY SWORDS");
+		printf("\n\t2. BUY KATANAS");
+		printf("\n\t3. BUY WHIPS");
+		printf("\n\t4. BUY GREATSWORDS");
+		printf("\n\t5. BUY STAVES");
+		printf("\n\t6. BUY SEALS");
+		printf("\n\t0. RETURN");
+	}
+
+		void printShopBuyWeapons(const Weapon aWeapons[], const int nWeaponType){
+			displayWeapons(aWeapons);
+
+			switch(nWeaponType){
+				case SWORD:
+					printf("\nSWORDS:"); break;
+				case KATANA:
+					printf("\nKATANAS:"); break;
+				case WHIP:
+					printf("\nWHIPS:"); break;
+				case GREATSWORD:
+					printf("\nGREATSWORDS:"); break;
+				case STAFF:
+					printf("\nSTAVES:"); break;
+				case SEAL:
+					printf("\nSEALS:"); break;
+				default:
+					prompt(102);
+			}
+			
+			printf("\n\t1. %s ", aWeapons[0].strWeaponName);
+			printf("\n\t2. %s ", aWeapons[1].strWeaponName);
+			printf("\n\t3. %s ", aWeapons[2].strWeaponName);
+			printf("\n\t4. %s ", aWeapons[3].strWeaponName);
+			printf("\n\t0. CHECK OTHER WEAPONS");
+		}
+
+	void displayWeapons(const Weapon aWeapons[]){
+						//4 weapons //3 lines each
+		int nLines = 2;
+		char strStore[4][nLines][WEAPON_ICON_WIDTH+1];
+
+		int i, j;
+		for (i = 0; i < 4; i++){
+			int nNameLen = (int)strlen(aWeapons[i].strWeaponName);
+			for (j = 0; j < nLines; j++){
+				strncpy(strStore[i][j], aWeapons[i].strWeaponName + (WEAPON_ICON_WIDTH * j), WEAPON_ICON_WIDTH);
+				
+				if(strStore[i][j][0] == ' '){ strcpy(strStore[i][j], strStore[i][j] + 1);  }
+				if(j * WEAPON_ICON_WIDTH > nNameLen) {strcpy(strStore[i][j], "        "); }
+
+				fillText(strStore[i][j], WEAPON_ICON_WIDTH);
+				strStore[i][j][WEAPON_ICON_WIDTH] = '\0';
+			}
+		}
+		
+
+		printf("\n\n"); printSymbols(WEAPON_ICON_WIDTH*4+5, BAR_SYMBOL);
+		printf("\n▮"); printf("1"); printSymbols(WEAPON_ICON_WIDTH-1, SPACE_SYMBOL); printf("▮");
+						printf("2"); printSymbols(WEAPON_ICON_WIDTH-1, SPACE_SYMBOL); printf("▮");
+						printf("3"); printSymbols(WEAPON_ICON_WIDTH-1, SPACE_SYMBOL); printf("▮");
+						printf("4"); printSymbols(WEAPON_ICON_WIDTH-1, SPACE_SYMBOL); printf("▮");
+		for (j = 0; j < nLines; j++){
+			printf("\n▮%s▮%s▮%s▮%s▮", strStore[0][j], strStore[1][j], strStore[2][j], strStore[3][j]);
+		}
+
+		printf("\n"); printSymbols(WEAPON_ICON_WIDTH*4+5, BAR_SYMBOL);
+		printf("\n");
+		string10 strWords[NUMBER_OF_STATS] = { " HP", "END", "DEX", "STR", "INT", "FTH" };
+
+		for (i = 0; i < NUMBER_OF_STATS; i++){
+			for (j = 0; j < 4; j++){
+				 printStatLine(aWeapons[j].aStats[i], strWords[i]);
+			} printf("▮\n");
+		}
+
+		printSymbols(WEAPON_ICON_WIDTH*4+5, BAR_SYMBOL);
+	}
+
+void fillText(char strText[], const int nSize){
+	while((int)strlen(strText) < nSize){
+		strcat(strText, " ");
+	}
+}
+
+void printStatLine(const int nNum, const char strText[]){
+	printf("▮  %s : %d", strText, nNum); printSymbols(WEAPON_ICON_WIDTH - calcDigits(nNum) - 5 - (int)strlen(strText), SPACE_SYMBOL);
+}
+
+void printHeader(const stringMax strName){
+	printf("\n  ▮ "); printf(UWHITE); printf("%s", strName); printf(COLOR_RESET); printSymbols(BARS_WIDTH - (int)strlen(strName) - 4, SPACE_SYMBOL); printf(" ▮");
 }

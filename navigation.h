@@ -11,5 +11,7 @@ void getLevelingMenu(Player* pPlayer);
 		int checkLevelUp(const int nStatLevel, const int nRuneCost, const int nRunes);
 
 void getInventoryMenu(int* pInventory);
-void getShopMenu(Player* pPlayer);
+void getShopOpen(Player* pPlayer);
+	void getShopBuyMenu(Player* pPlayer, Weapon* pAllWeapons);
+		void getShopBuyWeapons(Weapon aWeapons[], const int nWeaponType);
 #endif

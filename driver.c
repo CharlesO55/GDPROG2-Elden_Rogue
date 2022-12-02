@@ -13,6 +13,6 @@
 //gcc -Wall -std=c99 -o demo driver.c && demo
 
 int main(){
+    startUp();
     getTitleScreen();
-
 }
