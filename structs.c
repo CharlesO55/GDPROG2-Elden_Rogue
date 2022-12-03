@@ -5,7 +5,15 @@ void setPlayerStats(Player* pPlay, string25 strNewName, int nNewRunes, int aNewS
     pPlay->nRunes = nNewRunes;
     pPlay->sJob = sNewJob;
 
+    pPlay->sEquipment.nInventoryCapacity = STARTING_INVENTORY_SIZE;
+    pPlay->sEquipment.nInventoryUsedSlots = 0;
+    pPlay->sEquipment.pWeaponInventory = malloc(sizeof(Weapon) * STARTING_INVENTORY_SIZE);
+
     int i;
+    for (i = 0; i < STARTING_INVENTORY_SIZE; i++){
+    	setWeaponStats(pPlay->sEquipment.pWeaponInventory+i, EMPTY);
+    }
+
     for (i = 0; i < MAX_SHARDS; i++){
         pPlay->aShards[i] = aNewShards[i];
     }
@@ -78,8 +86,23 @@ Weapon* getAllWeapons(){
 	return pAllWeapon;
 }
 
+
 	void setWeaponStats(Weapon* pWeapon, int nIndex){
 		pWeapon->nIdentifier = nIndex;
+		int i;
+
+		if(nIndex == EMPTY){
+			strcpy(pWeapon->strWeaponName, "EMPTY");
+    		pWeapon->nRuneCost = 0;
+   	 		pWeapon->nDexCost = 0;
+
+   	 		for (i = 0; i < NUMBER_OF_STATS; i++){
+    			pWeapon->aStats[i] = 0;
+    		} 
+    		return;
+		}
+
+
 		int nRow = nIndex / TOTAL_WEAPONS_TYPES_CHOICES;
 		int nCol = nIndex % TOTAL_WEAPONS_TYPES_CHOICES;
 
@@ -87,8 +110,7 @@ Weapon* getAllWeapons(){
     	pWeapon->nRuneCost = CONFIG_WeaponRuneCost[nRow][nCol];
    	 	pWeapon->nDexCost = CONFIG_WeaponDexterityReq[nRow][nCol];
 
-
-    	int i;
+    	
     	for (i = 0; i < NUMBER_OF_STATS; i++){
     		pWeapon->aStats[i] = CONFIG_WeaponStats[nRow][nCol][i];
     	}

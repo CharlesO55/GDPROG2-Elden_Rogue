@@ -23,10 +23,10 @@ typedef struct WeaponTag{
 
 
 typedef struct EquipmentTag{
-    Weapon sEquipedWeapon;
-    int* pWeaponInventory;
     int nPotions;
-} Equpment;
+    int nInventoryUsedSlots, nInventoryCapacity;
+    Weapon* pWeaponInventory;   //Index 0 - Equipped weapon
+} Equipment;
 
 
 typedef struct PlayerTag{
@@ -35,7 +35,7 @@ typedef struct PlayerTag{
     int aShards[MAX_SHARDS];
     //int nProgress[][];
     JobClass sJob;
-    Equpment sEquipment;
+    Equipment sEquipment;
 } Player;
 
 

@@ -20,15 +20,16 @@ void printRoundTableScreen(const Player sPlayer);
 	void printLevelingScreen(const Player sPlayer, const int nRuneCost);
 
 
-	void printInventoryScreen(int* pInventory, int nPage);
+	void printInventoryScreen(const Weapon aWeapons[], const int nPage, const int nDex, const char strEquipped[]);
 
 	void printShopOpening(const string25 strName, const int nRunes);
 		void printShopBuyScreen(const int nRunes);
-			void printShopBuyWeapons(const Weapon aWeapons[], const int nWeaponType);
+			void printShopBuyWeapons(const Weapon aWeapons[], const int nWeaponType, const int nRunes);
 				void displayWeapons(const Weapon aWeapons[]);
 
 
 void printHeader(const stringMax strName);
 void printStatLine(const int nNum, const char strText[]);
 void fillText(char string[], const int nSize);
+
 #endif

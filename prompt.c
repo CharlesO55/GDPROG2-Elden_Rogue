@@ -15,6 +15,15 @@ void prompt(int nCode){
 		case 3:
 			printf("\n[SYSTEM]: Leveled up!");
 			break;
+		case 4:
+			printf("\n[SYSTEM]: Bought new weapon!");
+			break;
+		case 5:
+			printf("\n[SYSTEM]: Equipped weapon!");
+			break;
+		case 6:
+			printf("\n[SYSTEM]: Unequipped weapon!");
+			break;
 		case 100:
 			printf("\n[ERROR]: Enter a valid input.");
 			break;
@@ -29,6 +38,24 @@ void prompt(int nCode){
 			break;
 		case 104:
 			printf("\n[ERROR]: Max level reached.");
+			break;
+		case 105:
+			printf("\n[ERROR]: Dexterity requirement not met.");
+			break;
+		case 106:
+			printf("\n[ERROR]: Add weapon failed.");
+			break;
+		case 107:
+			printf("\n[ERROR]: No more pages.");
+			break;
+		case 108:
+			printf("\n[ERROR]: Empty slot selected.");
+			break;
+		case 109:
+			printf("\n[ERROR]: No weapon currently equipped.");
+			break;
+		case 110:
+			printf("\n[ERROR]: Insufficient dexterity.");
 			break;
 		default:
 			printf("\n[ERROR]: Not in prompt options.");

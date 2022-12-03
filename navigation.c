@@ -60,7 +60,7 @@ void getCharCreationScreen(Player* pPlayer){
 				if ((int)strlen(strTempName) && sTempJob.nLevel){
 					//FINALIZE PLAYER STATS
 					int aEmptyShards[MAX_SHARDS] = {0, 0, 0, 0, 0, 0};
-					setPlayerStats(pPlayer, strTempName, 1000, aEmptyShards, sTempJob);
+					setPlayerStats(pPlayer, strTempName, STARTER_RUNES, aEmptyShards, sTempJob);
 					repackageStats(pPlayer);
 					prompt(2);
 					getRoundTable(pPlayer);
@@ -137,7 +137,7 @@ void getRoundTable(Player* pPlayer){
 			break;
 		case 3:	//Inventory
 			prompt(2);
-			getInventoryMenu(pPlayer->sEquipment.pWeaponInventory);
+			getInventoryMenu(&(pPlayer->sEquipment), pPlayer->sJob.nDexterity);
 			break;
 		case 4:	//Shop
 			prompt(2);
@@ -207,22 +207,51 @@ void getLevelingMenu(Player* pPlayer){
 		}
 
 
-void getInventoryMenu(int* pInventory){
+void getInventoryMenu(Equipment* pEquipment, const int nDex){
 	int nChoice;
 	int nPage = 0;
+	Weapon sTempWep;
+	int nIndex;
 	do {
-		printInventoryScreen(pInventory, nPage);
-		scanIntChoice(&nChoice, 0, 3);
+											//1-4: 4 weapons inventory							//0: Equipped
+		printInventoryScreen((pEquipment->pWeaponInventory+(nPage*4+1)), nPage, nDex, pEquipment->pWeaponInventory->strWeaponName);
+		scanIntChoice(&nChoice, 0, 7);
 
 		switch(nChoice){
 			case 1:
-				break;
 			case 2:
-				nPage--;
-				break;
 			case 3:
-				if (nPage)
-				nPage++;
+			case 4:
+						//1-4: 4 weapons in inventory
+				nIndex = nPage*4 + nChoice;
+				sTempWep = *(pEquipment->pWeaponInventory+(nIndex));
+				
+				if (sTempWep.nIdentifier == EMPTY){	prompt(108); break; }
+
+				if (nDex >= sTempWep.nDexCost){	
+					setWeaponStats((pEquipment->pWeaponInventory+(nIndex)), pEquipment->pWeaponInventory->nIdentifier);
+					setWeaponStats(pEquipment->pWeaponInventory, sTempWep.nIdentifier);
+					//*(pEquipment->pWeaponInventory) = sTempWep;
+					prompt(5);
+				}
+
+				else{ prompt(110); }
+				break;
+			case 5:
+				if (pEquipment->pWeaponInventory->nIdentifier != EMPTY){
+					addWeapon(pEquipment, pEquipment->pWeaponInventory->nIdentifier);	//Readd the weapon to list
+					setWeaponStats(pEquipment->pWeaponInventory, EMPTY);	//Reset to empty
+					prompt(6);
+				}
+				else{ prompt(109); }
+				break;
+			case 6:
+				if (nPage > 0){nPage--;}
+				else {prompt(107);}
+				break;
+			case 7:
+				if (nPage < (int)(pEquipment->nInventoryCapacity / 4)-1){nPage++;}
+				else {prompt(107);}
 				break;
 			case 0:
 				prompt(1);
@@ -265,17 +294,75 @@ void getShopOpen(Player* pPlayer){
 			printShopBuyScreen(pPlayer->nRunes);
 			scanIntChoice(&nChoice, 0, TOTAL_WEAPONS_TYPES);
 			if(nChoice){
-				getShopBuyWeapons(pAllWeapons+((nChoice-1)*TOTAL_WEAPONS_TYPES_CHOICES), nChoice);
+				getShopBuyWeapons(pPlayer, pAllWeapons+((nChoice-1)*TOTAL_WEAPONS_TYPES_CHOICES), nChoice);
 			}
 		} while(nChoice);
 		prompt(1);
 	}
 
-		void getShopBuyWeapons(Weapon aWeapons[], const int nWeaponType){
+		void getShopBuyWeapons(Player* pPlayer, const Weapon aWeapons[], const int nWeaponType){
 			int nChoice;
 			do{
-				printShopBuyWeapons(aWeapons, nWeaponType);
+				printShopBuyWeapons(aWeapons, nWeaponType, pPlayer->nRunes);
 				scanIntChoice(&nChoice, 0, TOTAL_WEAPONS_TYPES_CHOICES);
+				
+				if (nChoice != 0 && checkWeaponPurchase(*pPlayer, aWeapons[nChoice-1].nRuneCost, aWeapons[nChoice-1].nDexCost)){
+					//setWeaponStats(pPlayer->sEquipment.pWeaponInventory+0, aWeapons[nChoice-1].nIdentifier);
+					
+					addWeapon(&(pPlayer->sEquipment), aWeapons[nChoice-1].nIdentifier);
+
+					pPlayer->nRunes -= aWeapons[nChoice-1].nRuneCost;
+					prompt(4);
+				}
 			}while(nChoice);
 			prompt(1);
 		}
+
+
+			int checkWeaponPurchase(const Player sPlayer, const int nRuneCost, const int nDexCost){
+				if (sPlayer.nRunes < nRuneCost){
+					prompt(103);
+					return 0;
+				} /*	//DEXTERITY REQ NOT PART OF WEAPON PURCHASE
+				if (sPlayer.sJob.nDexterity < nDexCost){
+					prompt(105);
+					return 0;
+				}*/
+				return 1;
+			}
+
+			void addWeapon(Equipment* pEquipment, const int nIdentifier){
+				int i;
+				//Expand dynamic array if already at limit
+				if (pEquipment->nInventoryUsedSlots >= pEquipment->nInventoryCapacity){
+					pEquipment->nInventoryCapacity += 4;
+					pEquipment->pWeaponInventory = realloc(pEquipment->pWeaponInventory, (pEquipment->nInventoryCapacity * sizeof(Weapon)));
+					
+					//Set new slots to empty so we can detect them
+					for(i = pEquipment->nInventoryCapacity - 4; i < pEquipment->nInventoryCapacity; i++){
+						setWeaponStats(pEquipment->pWeaponInventory + i, EMPTY);
+					}
+				}
+
+				int nSelected = findEmptySlot(pEquipment->pWeaponInventory, pEquipment->nInventoryCapacity);
+
+				if (nSelected != -1){
+					setWeaponStats(pEquipment->pWeaponInventory + nSelected, nIdentifier);
+					pEquipment->nInventoryUsedSlots += 1;
+					return;
+				}
+
+				prompt(106);
+			}
+
+
+
+			int findEmptySlot(const Weapon* pInventory, const int nElements){
+				int i = 1;	//Excluding first slot[0] for equipped items only
+				while(i < nElements){
+					if (pInventory[i].nIdentifier == EMPTY) {printf("\nEMPTY FOUND\n"); return i;}
+					i++;
+				}
+				printf("\nno EMPTY FOUND\n");
+				return -1;
+			}

@@ -72,12 +72,6 @@ void printSymbols(const int nAmount, const int nSymbol){
 		case SPACE_SYMBOL: 
 			printf(" ");
 			break;
-		/*case SHARD_SYMBOL: 
-			printf("▲");
-			break;
-		case EMPTY_SHARD_SYMBOL: 
-			printf("△");
-			break;*/
 		default:
 			printf("");
 		}
@@ -145,8 +139,28 @@ void printLevelingScreen(const Player sPlayer, const int nRuneCost){
 
 
 
-void printInventoryScreen(int* pInventory, int nPage){
+void printInventoryScreen(const Weapon aWeapons[], const int nPage, const int nDex, const char strEquipped[]){
+	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
+	printHeader("INVENTORY");
+	printf("\n  ▮ EQUIPPED: %s", strEquipped); printSymbols(BARS_WIDTH - (int)strlen("▮ EQUIPPED: ") - (int)strlen(strEquipped), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
 
+	displayWeapons(aWeapons);
+
+	printf(UWHITE); printf("\nPAGE %d EQUIPMENT: ", nPage);	printSymbols(15, SPACE_SYMBOL); printf("DEX REQ");
+	printf(COLOR_RESET);
+	int i;
+	for (i = 0; i < 4; i++){
+		if(nDex < aWeapons[i].nDexCost){ printf(RED);}
+		printf("\n\t%d. %s ", i + 1, aWeapons[i].strWeaponName);	
+		printSymbols(25 - (int)strlen(aWeapons[i].strWeaponName), SPACE_SYMBOL);	
+		printf("%d", aWeapons[i].nDexCost);
+		printf(COLOR_RESET);
+	} 
+	printf("\n\t5. UNEQUIP WEAPON");
+	printf("\n6. PREV PAGE");
+	printf("\n7. NEXT PAGE");
+	printf("\n0. RETURN TO ROUNDTABLE HOLD");
 }
 
 void printShopOpening(const string25 strName, const int nRunes){
@@ -182,31 +196,27 @@ void printShopOpening(const string25 strName, const int nRunes){
 		printf("\n\t0. RETURN");
 	}
 
-		void printShopBuyWeapons(const Weapon aWeapons[], const int nWeaponType){
+		void printShopBuyWeapons(const Weapon aWeapons[], const int nWeaponType, const int nRunes){
 			displayWeapons(aWeapons);
 
-			switch(nWeaponType){
-				case SWORD:
-					printf("\nSWORDS:"); break;
-				case KATANA:
-					printf("\nKATANAS:"); break;
-				case WHIP:
-					printf("\nWHIPS:"); break;
-				case GREATSWORD:
-					printf("\nGREATSWORDS:"); break;
-				case STAFF:
-					printf("\nSTAVES:"); break;
-				case SEAL:
-					printf("\nSEALS:"); break;
-				default:
-					prompt(102);
+			printf(UWHITE);
+			printf("\n   %s", CONFIG_WeaponTypes[nWeaponType-1]);
+			printSymbols(26 - (int)strlen(CONFIG_WeaponTypes[nWeaponType-1]), SPACE_SYMBOL);
+			printf("RUNE COST   DEX REQ");
+			printf(COLOR_RESET);
+
+
+			int i;			
+			for (i = 0; i < TOTAL_WEAPONS_TYPES_CHOICES; i++){
+				if(nRunes < aWeapons[i].nRuneCost){ printf(RED);}
+				printf("\n%d. %s ", i + 1, aWeapons[i].strWeaponName);	
+				printSymbols(25 - (int)strlen(aWeapons[i].strWeaponName), SPACE_SYMBOL);	
+				printf("%d", aWeapons[i].nRuneCost);
+				printSymbols(12 - calcDigits(aWeapons[i].nRuneCost), SPACE_SYMBOL);
+				printf("%d", aWeapons[i].nDexCost);
 			}
-			
-			printf("\n\t1. %s ", aWeapons[0].strWeaponName);
-			printf("\n\t2. %s ", aWeapons[1].strWeaponName);
-			printf("\n\t3. %s ", aWeapons[2].strWeaponName);
-			printf("\n\t4. %s ", aWeapons[3].strWeaponName);
-			printf("\n\t0. CHECK OTHER WEAPONS");
+			printf(COLOR_RESET);
+			printf("\n0. CHECK OTHER WEAPONS");
 		}
 
 	void displayWeapons(const Weapon aWeapons[]){
