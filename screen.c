@@ -1,4 +1,5 @@
 #include "screen.h"
+#include "Menus/levelling_system.h"
 
 void printTitleScreen(){
 	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
@@ -147,7 +148,7 @@ void printInventoryScreen(const Weapon aWeapons[], const int nPage, const int nD
 
 	displayWeapons(aWeapons);
 
-	printf(UWHITE); printf("\nPAGE %d EQUIPMENT: ", nPage);	printSymbols(15, SPACE_SYMBOL); printf("DEX REQ");
+	printf(UWHITE); printf("\nPAGE %d EQUIPMENT: ", nPage);	printSymbols(19, SPACE_SYMBOL); printf("DEX REQ");
 	printf(COLOR_RESET);
 	int i;
 	for (i = 0; i < 4; i++){
@@ -218,6 +219,29 @@ void printShopOpening(const string25 strName, const int nRunes){
 			printf(COLOR_RESET);
 			printf("\n0. CHECK OTHER WEAPONS");
 		}
+
+	void printShopSellScreen(const Player* pPlayer, const int nPage){
+		printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
+		printHeader("SELL WEAPONS");
+		printf("\n  ▮ RUNES: %d", pPlayer->nRunes); printSymbols(BARS_WIDTH - (int)strlen("▮ RUNES: ") - calcDigits(pPlayer->nRunes), SPACE_SYMBOL); printf(" ▮");
+		printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
+
+		displayWeapons(pPlayer->sEquipment.pWeaponInventory+(nPage*4+1));
+
+		printf(UWHITE); printf("\nPAGE %d EQUIPMENT: ", nPage);	printSymbols(19, SPACE_SYMBOL); printf("RUNES");
+		printf(COLOR_RESET);
+
+		int i;
+		for (i = 1; i < 5; i++){
+			printf("\n\t%d. %s ", i, pPlayer->sEquipment.pWeaponInventory[nPage*4 + i].strWeaponName);	
+			printSymbols(25 - (int)strlen(pPlayer->sEquipment.pWeaponInventory[nPage*4 + i].strWeaponName), SPACE_SYMBOL);	
+			printf("%d", pPlayer->sEquipment.pWeaponInventory[nPage*4 + i].nRuneCost / 2);
+		} 
+
+		printf("\n5. PREV PAGE");
+		printf("\n6. NEXT PAGE");
+		printf("\n0. CANCEL");
+	}
 
 	void displayWeapons(const Weapon aWeapons[]){
 						//4 weapons //3 lines each

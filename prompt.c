@@ -24,6 +24,9 @@ void prompt(int nCode){
 		case 6:
 			printf("\n[SYSTEM]: Unequipped weapon!");
 			break;
+		case 7:
+			printf("\n[SYSTEM]: Sold weapon!");
+			break;
 		case 100:
 			printf("\n[ERROR]: Enter a valid input.");
 			break;

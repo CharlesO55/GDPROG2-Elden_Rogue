@@ -26,6 +26,7 @@ void printRoundTableScreen(const Player sPlayer);
 		void printShopBuyScreen(const int nRunes);
 			void printShopBuyWeapons(const Weapon aWeapons[], const int nWeaponType, const int nRunes);
 				void displayWeapons(const Weapon aWeapons[]);
+		void printShopSellScreen(const Player* pPlayer, const int nPage);
 
 
 void printHeader(const stringMax strName);
