@@ -88,7 +88,7 @@ void printRoundTableScreen(const Player sPlayer){
 	printf("\n  ▮ Level: %d", sPlayer.sJob.nLevel); printSymbols(7 - calcDigits(sPlayer.sJob.nLevel), SPACE_SYMBOL); 
 		printf("Class: %s", sPlayer.sJob.strJob);	 printSymbols(BARS_WIDTH - 25 - (int)strlen(sPlayer.sJob.strJob), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮ Runes: %d", sPlayer.nRunes); printSymbols(7 - calcDigits(sPlayer.nRunes), SPACE_SYMBOL);
-		printf("Shards: "); printShards(sPlayer.aShards); /*printSymbols(sPlayer.nShards, SHARD_SYMBOL); printSymbols(MAX_SHARDS - sPlayer.nShards, EMPTY_SHARD_SYMBOL); */printSymbols(3, SPACE_SYMBOL); printf(" ▮");
+		printf("Shards: "); printShards(sPlayer.aShards); printSymbols(3, SPACE_SYMBOL); printf(" ▮");
 	printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
 
 	printf("\n\nSELECT ACTION:");

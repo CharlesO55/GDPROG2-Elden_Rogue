@@ -60,6 +60,9 @@ void prompt(int nCode){
 		case 110:
 			printf("\n[ERROR]: Insufficient dexterity.");
 			break;
+		case 111:
+			printf("\n[ERROR]: Area still locked.");
+			break;
 		default:
 			printf("\n[ERROR]: Not in prompt options.");
 	}

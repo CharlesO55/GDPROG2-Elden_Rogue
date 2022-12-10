@@ -21,6 +21,7 @@ typedef char string10[11];
 #define GREEN 		"\e[0;32m"
 #define BLUE 		"\e[1;34m"	
 #define UWHITE 		"\e[4;37m"
+#define GRAY 		"\e[1;30m"
 #define COLOR_RESET "\e[0m"
 
 

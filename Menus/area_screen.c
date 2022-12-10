@@ -1,0 +1,123 @@
+#include "area_screen.h"
+#include "area_system.h"
+
+void printFastTravelScreen(const int aShards[MAX_SHARDS]){
+	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
+	printHeader("FAST TRAVEL MENU");
+	printf("\n  ▮ SHARDS: ");printShards(aShards); printSymbols(BARS_WIDTH - (int)strlen("▮ SHARDS: ") - 6, SPACE_SYMBOL); printf(" ▮");
+	printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL); 
+
+	printf("\n\n  TRAVEL TO:");
+	printf("\n\t1. STORMVEIL CASTLE");
+	printf("\n\t2. RAYA LUCARIA ACADEMY");
+	printf("\n\t3. REDMANE CASTLE");
+	printf("\n\t4. VOLCANO MANOR");
+	if (!checkAreaUnlocked(aShards)) {printf(RED);}
+	printf("\n\t5. LEYNDELL ROYAL CAPITAL");
+	printf("\n\t6. THE ELDEN THRONE"); printf(COLOR_RESET);
+	printf("\n  0. RETURN TO ROUNDTABLE HOLD");
+}
+
+
+void printAreaMap(const Player* pPlayer, const Area* pFloor){
+	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
+	printf("\n  ▮ "); printf(UWHITE); printf("%s %d-%d", pFloor->strAreaName, pFloor->nArea, pFloor->nFloor); printf(COLOR_RESET); printSymbols(BARS_WIDTH - (int)strlen(pFloor->strAreaName) - 8, SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮ LV %d %s", pPlayer->sJob.nLevel, pPlayer->sJob.strJob); printSymbols(20 - (int)strlen("▮ LV ") - calcDigits(pPlayer->sJob.nLevel) - (int)strlen(pPlayer->sJob.strJob), SPACE_SYMBOL);
+		printf(" HP: %d", 100); printSymbols(14 - calcDigits(100) - (int)strlen(" HP: "), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  ▮ RUNES: %d", pPlayer->nRunes); printSymbols(21 - (int)strlen("▮ RUNES: ") - calcDigits(pPlayer->nRunes), SPACE_SYMBOL); 
+		printf(" POTIONS: %d", pPlayer->sEquipment.nPotions); printSymbols(13 - (int)strlen("POTIONS: ") - calcDigits(pPlayer->sEquipment.nPotions), SPACE_SYMBOL);  printf(" ▮");
+	printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL); printf("\n\n");
+
+	printTiles(pFloor);
+	printf("PRINTED TILES\n");
+}
+
+void printTiles(const Area* pFloor){
+	int i, j;
+	printf("\n\t");
+	for(i = 0; i < pFloor->nCol; i++){
+		for(j = 0; j < pFloor->nRow; j++){
+			checkTileColor(pFloor->pTiles[pFloor->nRow * i + j]);
+			printf("■■■");
+			printf(COLOR_RESET);
+			printf(" ");
+		}
+		printf("\n\t");
+		for(j = 0; j < pFloor->nRow; j++){
+			checkTileColor(pFloor->pTiles[pFloor->nRow * i + j]);
+			printf("■");
+			//printf("%d", pFloor->pTiles[pFloor->nRow * i + j]);
+			printTileContent(pFloor->pTiles[pFloor->nRow * i + j]);
+			printf("■");
+			printf(COLOR_RESET);
+			printf(" ");
+		}
+		printf("\n\t");
+		for(j = 0; j < pFloor->nRow; j++){
+			checkTileColor(pFloor->pTiles[pFloor->nRow * i + j]);
+			printf("■■■");
+			printf(COLOR_RESET);
+			printf(" ");
+		}
+		printf("\n\n\t");
+	}
+}
+
+void checkTileColor(const int nTile){
+	switch(nTile){
+		case TILE_INVALID:
+			printf(GRAY);
+			break;
+		case TILE_LOCKED_FAST_TRAVEL:
+		case TILE_BOSS:	
+		case TILE_CREDITS:	
+			printf(RED);
+			break;
+		case TILE_SPAWN:
+			printf(BLUE);
+			break;
+		case TILE_UP:
+		case TILE_DOWN:
+		case TILE_FAST_TRAVEL:
+			printf(GREEN);
+			break;
+		case TILE_EMPTY:
+			break;
+		default:
+			prompt(102);
+	}
+}
+
+void printTileContent(const int nTile){
+	switch(nTile){
+		case TILE_INVALID:
+			printf("⨉");
+			break;
+		case TILE_EMPTY:
+			printf(" ");
+			break;
+		case TILE_FAST_TRAVEL:
+			printf("↺");
+			break;
+		case TILE_SPAWN:
+			printf("※");
+			break;
+		case TILE_BOSS:
+			printf("⨂");
+			break;
+		case TILE_UP:
+			printf("▲");
+			break;
+		case TILE_DOWN:
+			printf("▼");
+			break;
+		case TILE_LOCKED_FAST_TRAVEL:
+			printf("֏");
+			break;
+		case TILE_CREDITS:
+			printf("Ω");
+			break;
+		default:
+			prompt(102);
+	}
+}

@@ -1,9 +1,7 @@
 #ifndef NAVIGATION_FILE
 #define NAVIGATION_FILE
 
-void getTitleScreen();/*
-void getCharCreationScreen(Player* pPlayer);
-void selectJobClass(JobClass *pPlayerJob);*/
+void getTitleScreen();
 void getRoundTable(Player* pPlayer);
 
 #endif
