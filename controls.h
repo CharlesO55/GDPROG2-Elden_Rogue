@@ -1,6 +1,7 @@
 #ifndef CONTROLS_FILE
 #define CONTROLS_FILE
 
+#define QUIT 0
 #define UP 1
 #define DOWN 2
 #define RIGHT 3
@@ -16,7 +17,7 @@
 #define KILL_SWITCH 96	// ` symbol
 
 void scanIntChoice(int *nChoice, int nMin, int nMax);
-void playerMovement(int* nAction);
+void scanPlayerControl(int* nAction);
 void scanString(char *strInput, int nMaxLetters);
 
 #endif

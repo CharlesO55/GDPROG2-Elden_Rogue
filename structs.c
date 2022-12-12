@@ -115,3 +115,9 @@ Weapon* getAllWeapons(){
     		pWeapon->aStats[i] = CONFIG_WeaponStats[nRow][nCol][i];
     	}
 	}
+
+
+void resetHealth(Player* pPlayer){
+	pPlayer->nCurHP = 100 * ((pPlayer->sJob.nHealth + pPlayer->sEquipment.pWeaponInventory->aStats[0]) / 2);
+	//printf("HP: %d from %d and %d\n", pPlayer->nCurHP, pPlayer->sJob.nHealth, pPlayer->sEquipment.pWeaponInventory->aStats[0]);
+}

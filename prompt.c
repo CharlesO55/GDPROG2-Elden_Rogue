@@ -63,6 +63,21 @@ void prompt(int nCode){
 		case 111:
 			printf("\n[ERROR]: Area still locked.");
 			break;
+		case 112:
+			printf("\n[ERROR]: No matching tile found.");
+			break;
+		case 113:
+			printf("\n[ERROR]: Can't move here.");
+			break;
+		case 114:
+			printf("\n[ERROR]: Nothing to interact here.");
+			break;
+		case 115:
+			printf("\n[ERROR]: Tile is locked.");
+			break;
+		case 116:
+			printf("\n[ERROR]: Out of potions.");
+			break;
 		default:
 			printf("\n[ERROR]: Not in prompt options.");
 	}

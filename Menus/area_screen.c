@@ -14,12 +14,13 @@ void printFastTravelScreen(const int aShards[MAX_SHARDS]){
 	printf("\n\t4. VOLCANO MANOR");
 	if (!checkAreaUnlocked(aShards)) {printf(RED);}
 	printf("\n\t5. LEYNDELL ROYAL CAPITAL");
+	if (aShards[4] == INVALID){ printf(RED); }
 	printf("\n\t6. THE ELDEN THRONE"); printf(COLOR_RESET);
 	printf("\n  0. RETURN TO ROUNDTABLE HOLD");
 }
 
 
-void printAreaMap(const Player* pPlayer, const Area* pFloor){
+void printAreaMap(const Player* pPlayer, const Area* pFloor, const int nPlayerPos){
 	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
 	printf("\n  ▮ "); printf(UWHITE); printf("%s %d-%d", pFloor->strAreaName, pFloor->nArea, pFloor->nFloor); printf(COLOR_RESET); printSymbols(BARS_WIDTH - (int)strlen(pFloor->strAreaName) - 8, SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮ LV %d %s", pPlayer->sJob.nLevel, pPlayer->sJob.strJob); printSymbols(20 - (int)strlen("▮ LV ") - calcDigits(pPlayer->sJob.nLevel) - (int)strlen(pPlayer->sJob.strJob), SPACE_SYMBOL);
@@ -28,33 +29,45 @@ void printAreaMap(const Player* pPlayer, const Area* pFloor){
 		printf(" POTIONS: %d", pPlayer->sEquipment.nPotions); printSymbols(13 - (int)strlen("POTIONS: ") - calcDigits(pPlayer->sEquipment.nPotions), SPACE_SYMBOL);  printf(" ▮");
 	printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL); printf("\n\n");
 
-	printTiles(pFloor);
-	printf("PRINTED TILES\n");
+	printTiles(pFloor, nPlayerPos);
+
+	printf("\n\t◠  ◠  ◠  ◠  ◠  ◠");
+	printf("\n\t↺  ←  ↑  ↓  →  ◎");
+	printf("\n\t◡  ◡  ◡  ◡  ◡  ◡");
+	printf("\n\tQ  A  W  S  D  E");
 }
 
-void printTiles(const Area* pFloor){
+void printTiles(const Area* pFloor, const int nPlayerPos){
 	int i, j;
 	printf("\n\t");
-	for(i = 0; i < pFloor->nCol; i++){
-		for(j = 0; j < pFloor->nRow; j++){
-			checkTileColor(pFloor->pTiles[pFloor->nRow * i + j]);
+	for(i = 0; i < pFloor->nRow; i++){
+		for(j = 0; j < pFloor->nCol; j++){
+			if (nPlayerPos == pFloor->nCol * i + j)
+				{ printf(YELLOW); }
+			else 
+				{ checkTileColor(pFloor->pTiles[pFloor->nCol * i + j]); }
 			printf("■■■");
 			printf(COLOR_RESET);
 			printf(" ");
 		}
 		printf("\n\t");
-		for(j = 0; j < pFloor->nRow; j++){
-			checkTileColor(pFloor->pTiles[pFloor->nRow * i + j]);
+		for(j = 0; j < pFloor->nCol; j++){
+			if (nPlayerPos == pFloor->nCol * i + j)
+				{ printf(YELLOW); }
+			else 
+				{ checkTileColor(pFloor->pTiles[pFloor->nCol * i + j]); }
 			printf("■");
-			//printf("%d", pFloor->pTiles[pFloor->nRow * i + j]);
-			printTileContent(pFloor->pTiles[pFloor->nRow * i + j]);
+			printTileContent(pFloor->pTiles[pFloor->nCol * i + j]);
 			printf("■");
 			printf(COLOR_RESET);
 			printf(" ");
 		}
 		printf("\n\t");
-		for(j = 0; j < pFloor->nRow; j++){
-			checkTileColor(pFloor->pTiles[pFloor->nRow * i + j]);
+		for(j = 0; j < pFloor->nCol; j++){
+			if (nPlayerPos == pFloor->nCol * i + j)
+				{ printf(YELLOW); }
+			else 
+				{ checkTileColor(pFloor->pTiles[pFloor->nCol * i + j]); }
 			printf("■■■");
 			printf(COLOR_RESET);
 			printf(" ");
@@ -120,4 +133,21 @@ void printTileContent(const int nTile){
 		default:
 			prompt(102);
 	}
+}
+
+
+void printCreditsScreen(){
+	printf("\n\n\tTHANK YOU FOR PLAYING");
+	printf("\n\t     ELDEN ROGUE");
+
+	printf(UWHITE);	printf("\n\tDEVELOPERS:");	printf(COLOR_RESET);
+	printf("\n\t\tONG, CHARLES MATHEW");
+
+	printf(UWHITE); printf("\n\tSPECIAL THANKS:"); printf(COLOR_RESET);
+	printf("\n\t\tESPULGAR, CANDY JOYCE");
+	printf("\n\n");
+
+	printf("PRESS ANY BUTTON TO CONTINUE...");
+	int n;
+	scanf("%d", &n);
 }

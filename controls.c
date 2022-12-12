@@ -18,8 +18,6 @@ void scanIntChoice(int *nChoice, int nMin, int nMax){
         else{
             prompt(100);
         }
-
-
     }
 }
 
@@ -31,7 +29,7 @@ void scanString(char *strOutput, int nMaxLetters){
     strOutput[nMaxLetters] = '\0';
 }
 
-void playerMovement(int* nAction){
+void scanPlayerControl(int* nAction){
     char cInput;
     int nValid = INVALID;
 
@@ -65,9 +63,16 @@ void playerMovement(int* nAction){
                 *nAction = INTERACT;
                 nValid = VALID;
                 break;
+            case 'q':
+            case 'Q':
+                *nAction = QUIT;
+                nValid = VALID;
+                break;
+            case '`':
+                prompt(0);
+                exit(1);
             default:
                 prompt(100);
-                //printf("\n[ERROR]: ENTER A VALID VALUE");
             }
         }
 }

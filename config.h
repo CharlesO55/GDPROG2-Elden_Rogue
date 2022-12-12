@@ -19,6 +19,7 @@ typedef char string10[11];
 
 #define RED 		"\e[0;31m"
 #define GREEN 		"\e[0;32m"
+#define YELLOW 		"\e[0;33m"
 #define BLUE 		"\e[1;34m"	
 #define UWHITE 		"\e[4;37m"
 #define GRAY 		"\e[1;30m"

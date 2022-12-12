@@ -31,6 +31,7 @@ typedef struct EquipmentTag{
 
 typedef struct PlayerTag{
     string25 strPlayerName; //Player username
+    int nCurHP;            //HP active in floor
     int nRunes;             //Player currency
     int aShards[MAX_SHARDS];//Static list of shards (levels cleared)
     JobClass sJob;          //Chosen job
@@ -51,9 +52,17 @@ typedef struct AreaTag{
     int* pTiles;   //Tiles content
 } Area;
 
+typedef struct EnemyTag{
+    int nType;
+    int nHP;
+    int aAtkRange[2];
+    float aDefenses[3];
+    string25 strEnemyName;
+} Enemy;
 
 //FUNCTIONS
 void setPlayerStats(Player* pPlay, string25 strNewName, int nNewRunes, int aNewShards[MAX_SHARDS], JobClass sNewJob);
+void resetHealth(Player* pPlayer);
 
 JobClass* getAllJobs();
     void setJobStats(JobClass *sJob, int nLVL, int nHP, int nEND, int nDEX, int nSTR, int nINT, int nFTH, string10 strJobName);
@@ -61,6 +70,7 @@ JobClass* getAllJobs();
 
 Weapon* getAllWeapons();
     void setWeaponStats(Weapon* pWeapon, const int nIndex);
+
 
 
 #endif

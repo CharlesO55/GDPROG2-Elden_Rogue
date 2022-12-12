@@ -31,6 +31,7 @@ void getCharCreationScreen(Player* pPlayer){
 					int aEmptyShards[MAX_SHARDS] = {0, 0, 0, 0, 0, 0};
 					setPlayerStats(pPlayer, strTempName, STARTER_RUNES, aEmptyShards, sTempJob);
 					repackageStats(pPlayer);
+					resetHealth(pPlayer);
 					prompt(2);
 					getRoundTable(pPlayer);
 					nValid = VALID;		//Allow the loop to end
