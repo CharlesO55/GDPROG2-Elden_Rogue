@@ -9,7 +9,7 @@
 void getFastTravelMenu(Player* pPlayer){
 	int nChoice;
 	int nValid = VALID;
-	Area* pHead;
+	//Area* pHead;
 	
 	resetHealth(pPlayer);
 	pPlayer->sEquipment.nPotions = 8;	//Reset potions when entering new area
@@ -24,18 +24,19 @@ void getFastTravelMenu(Player* pPlayer){
 			case 2:
 			case 3:
 			case 4:	
-				pHead = initArea(nChoice-1);
+				//pHead = initArea(nChoice-1);
 				prompt(2);
-				getAreaPlay(pPlayer, pHead);
+				//getAreaPlay(pPlayer, pHead);
+				getAreaPlay(pPlayer, nChoice);
 
 				nValid = VALID;
 				break;
 			case 5:
 				if (checkAreaUnlocked(pPlayer->aShards)){	//Clear at least 2 areas
-					pHead = initArea(nChoice-1);
+					//pHead = initArea(nChoice-1);
 					prompt(2);
-					getAreaPlay(pPlayer, pHead);
-
+					//getAreaPlay(pPlayer, pHead);
+					getAreaPlay(pPlayer, nChoice);
 					nValid = VALID;
 				}
 				else
@@ -43,10 +44,10 @@ void getFastTravelMenu(Player* pPlayer){
 				break;
 			case 6:
 				if (pPlayer->aShards[4] == VALID || IS_AREA_5_UNLOCKED){		//Clear area 4
-					pHead = initArea(nChoice-1);
+					//pHead = initArea(nChoice-1);
 					prompt(2);
-					getAreaPlay(pPlayer, pHead);
-
+					//getAreaPlay(pPlayer, pHead);
+					getAreaPlay(pPlayer, nChoice);
 					nValid = VALID;
 				}
 				else 
@@ -104,6 +105,7 @@ Area* initArea(const int nArea){
 	}
 
 	connectFloors(nArea, pHead);
+	printf("\nADDRESS OF BEFORE pCurr: %p pNEXT: %p", pHead, pHead->pNext);
 /*
 	printf("finished area\n");
 	for (i = 0; i < 21; i++){
@@ -144,11 +146,11 @@ void createFloor(const int nArea, const int nFloor, Area* pFloor){
 	pFloor->pTiles = malloc(sizeof(int) * pFloor->nRow * pFloor->nCol);
 
 
-	printf("ASSIGNING TILES\n");
+	printf("ASSIGNING TILES [%d]x[%d]\n", pFloor->nRow, pFloor->nCol);
 	for (i = 0; i < pFloor->nRow; i++){
 		for (j = 0; j < pFloor->nCol; j++){
 			int nIndex = pFloor->nCol * i + j;
-			//printf("[%d-%d] %d WORK\n", i, j, aALL_AREA_TILES[nArea][nFloor][nIndex]);
+			printf("[%d][%d] or [%d] = %d\t", i, j, nIndex, aALL_AREA_TILES[nArea][nFloor][nIndex]);
 			//pFloor->pTiles[nIndex] = aALL_AREA_TILES[nArea][nFloor][nIndex];
 			switch(nArea){
 				case 0:
@@ -158,7 +160,9 @@ void createFloor(const int nArea, const int nFloor, Area* pFloor){
 					pFloor->pTiles[nIndex] = aAREA_1_TILES[nFloor][nIndex];
 					break;
 				case 2:
+					printf("SETTING...");
 					pFloor->pTiles[nIndex] = aAREA_2_TILES[nFloor][nIndex];
+					printf("[%d] SETTING SUCCESS!\n", nIndex);
 					break;
 				case 3:
 					pFloor->pTiles[nIndex] = aAREA_3_TILES[nFloor][nIndex];
@@ -183,19 +187,20 @@ void createFloor(const int nArea, const int nFloor, Area* pFloor){
 	@pPlayer - Player pointer
 	@pHead - Floor pointer
 */
-void getAreaPlay(Player* pPlayer, Area* pHead){
+void getAreaPlay(Player* pPlayer, const int nAreaChoice/*Area* pHead*/){
 	printf("STARTING AREA");
 	//int i;
 	int nAction;
 	int nQuit = INVALID;
-	Area* pCurrentFloor = pHead;
+	Area* pCurrentFloor = initArea(nAreaChoice-1);
+	Area* pActiveFloor = pCurrentFloor;
 
 	int nPlayerPos = findTile(pCurrentFloor, TILE_FAST_TRAVEL);
 	
 
 	do {
-		printf("\nFLOOR: %d-%d SIZE: %dx%d", pCurrentFloor->nArea, pCurrentFloor->nFloor, pCurrentFloor->nRow, pCurrentFloor->nCol);
-		printAreaMap(pPlayer, pCurrentFloor, nPlayerPos);
+		printf("\nFLOOR: %d-%d SIZE: %dx%d", /*pCurrentFloor*/pActiveFloor->nArea, /*pCurrentFloor*/pActiveFloor->nFloor, /*pCurrentFloor*/pActiveFloor->nRow, /*pCurrentFloor*/pActiveFloor->nCol);
+		printAreaMap(pPlayer, /*pCurrentFloor*/pActiveFloor, nPlayerPos);
 		scanPlayerControl(&nAction);
 
 		switch(nAction){
@@ -203,10 +208,10 @@ void getAreaPlay(Player* pPlayer, Area* pHead){
 			case DOWN:
 			case LEFT:
 			case RIGHT:
-				movePlayer(pCurrentFloor, nAction, &nPlayerPos);
+				movePlayer(/*pCurrentFloor*/pActiveFloor, nAction, &nPlayerPos);
 				break;
 			case INTERACT:
-				interactTile(pCurrentFloor, &nPlayerPos, &nQuit, pPlayer);
+				interactTile(/*pCurrentFloor*/pActiveFloor, &nPlayerPos, &nQuit, pPlayer);
 				break;
 			case QUIT:
 				nQuit = VALID;
@@ -215,6 +220,7 @@ void getAreaPlay(Player* pPlayer, Area* pHead){
 				prompt(102);
 		}
 	} while (!nQuit);
+	free(pCurrentFloor);
 	/*
 	for (i = 0; i < aFLOORS[pCurrentFloor->nArea]; i++){
 		printAreaMap(pPlayer, pHead+i);
@@ -340,8 +346,14 @@ void interactTile(Area *pCurrentFloor, int* pPlayerPos, int* pQuit, Player* pPla
 			}
 			break;
 		case TILE_UP:
+			printf("\nADDRESS OF BEFORE pCurr: %p pNEXT: %p", pCurrentFloor, pCurrentFloor->pNext);
+			pCurrentFloor = pCurrentFloor->pNext;
+			printf("\nADDRESS OF AFTER pCurr: %p pNEXT: %p", pCurrentFloor, pCurrentFloor->pNext);
+			break;
 		case TILE_DOWN:
+			printf("\nADDRESS OF BEFORE pCurr: %p pNEXT: %p", pCurrentFloor, pCurrentFloor->pNext);
 			changeFloor(&pCurrentFloor, pPlayerPos, nTileType);
+			printf("\nADDRESS OF AFTER pCurr: %p pNEXT: %p", pCurrentFloor, pCurrentFloor->pNext);
 			break;
 		case TILE_FAST_TRAVEL:
 			{ *pQuit = VALID; }
@@ -434,8 +446,9 @@ void changeFloor(Area** pCurrentFloor, int* pPlayerPos, const int nTileType){
 	if (nTileType == TILE_UP){
 		if ((*pCurrentFloor)->pNext == NULL)
 			{prompt(117); return;}
-		
+
 		*pCurrentFloor = (*pCurrentFloor)->pNext;
+		printf("\nADDRESS OF INSIDE AFTER pCurr: %p pNEXT: %p", *pCurrentFloor, (*pCurrentFloor)->pNext);
 
 		printf("\nFLOOR: %d-%d SIZE: %dx%d", (*pCurrentFloor)->nArea, (*pCurrentFloor)->nFloor, (*pCurrentFloor)->nRow, (*pCurrentFloor)->nCol);
 
