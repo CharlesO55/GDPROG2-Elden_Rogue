@@ -47,8 +47,8 @@ void getRoundTable(Player* pPlayer){
 		scanIntChoice(&nChoice, 0, 5);
 		switch(nChoice){
 			case 1:	//Fast travel
-				getFastTravelMenu(pPlayer);
 				prompt(2);
+				getFastTravelMenu(pPlayer);
 				break;
 			case 2:	//Level up
 				prompt(2);

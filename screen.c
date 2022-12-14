@@ -118,7 +118,7 @@ void printLevelingScreen(const Player sPlayer, const int nRuneCost){
 	printHeader("LEVEL UP");
 	printf("\n  ▮ Level: %d", sPlayer.sJob.nLevel); printSymbols(BARS_WIDTH - (int)strlen("▮ Level: ") - calcDigits(sPlayer.sJob.nLevel), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮ Runes: %d", sPlayer.nRunes); printSymbols(7 - calcDigits(sPlayer.nRunes), SPACE_SYMBOL); 
-		if(checkLevelUp(10, nRuneCost, sPlayer.nRunes) == INVALID){printf("\033[0;31m");} printf(" Rune Cost: %d", nRuneCost); printf("\033[0m"); printSymbols(5 - calcDigits(nRuneCost), SPACE_SYMBOL); printf(" ▮");
+		if(checkLevelUp(10, nRuneCost, sPlayer.nRunes) == 0){printf(RED);} printf(" Rune Cost: %d", nRuneCost); printf(COLOR_RESET); printSymbols(5 - calcDigits(nRuneCost), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮       Health : %d", sPlayer.sJob.nHealth);	       printSymbols(BARS_WIDTH - (int)strlen("▮       Health : ") - calcDigits(sPlayer.sJob.nHealth), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮    Endurance : %d", sPlayer.sJob.nEndurance);    printSymbols(BARS_WIDTH - (int)strlen("▮    Endurance : ") - calcDigits(sPlayer.sJob.nEndurance), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮    Dexterity : %d", sPlayer.sJob.nDexterity);    printSymbols(BARS_WIDTH - (int)strlen("▮    Dexterity : ") - calcDigits(sPlayer.sJob.nDexterity), SPACE_SYMBOL); printf(" ▮");

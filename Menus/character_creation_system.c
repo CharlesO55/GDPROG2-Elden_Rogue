@@ -1,6 +1,8 @@
 #include "character_creation_system.h"
 
-
+/*Creates character. Take name and job class before proceeding.
+	@param pPlayer - The player's stats
+*/
 void getCharCreationScreen(Player* pPlayer){
 	int nChoice;
 	int nValid = INVALID;
@@ -52,7 +54,9 @@ void getCharCreationScreen(Player* pPlayer){
 }
 
 
-
+	/*Read all jobs and let player choose which they want
+		@param pPlayerJob - The job struct to alter
+	*/
 	void selectJobClass(JobClass *pPlayerJob){
 		int nChoice = VALID;
 

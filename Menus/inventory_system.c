@@ -1,6 +1,11 @@
 #include "inventory_system.h"
 #include "shop_system.h"
 
+
+/*Display the inventory and let player choose the equipments to equip/unequip
+	@param pEquipment - Player's equipment
+	@param nDex - Player's dexterity stat
+*/
 void getInventoryMenu(Equipment* pEquipment, const int nDex){
 	int nChoice;
 	int nPage = 0;
@@ -25,7 +30,6 @@ void getInventoryMenu(Equipment* pEquipment, const int nDex){
 				if (nDex >= sTempWep.nDexCost){	
 					setWeaponStats((pEquipment->pWeaponInventory+(nIndex)), pEquipment->pWeaponInventory->nIdentifier);
 					setWeaponStats(pEquipment->pWeaponInventory, sTempWep.nIdentifier);
-					//*(pEquipment->pWeaponInventory) = sTempWep;
 					prompt(5);
 				}
 

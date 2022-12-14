@@ -36,6 +36,13 @@ typedef char string10[11];
 #define EMPTY -1
 
 #define STARTING_INVENTORY_SIZE 5
+
+#define LETTERS_PER_LINE 14
+
+//Debugging
+#define IS_AREA_4_UNLOCKED INVALID
+#define IS_AREA_5_UNLOCKED INVALID
+
 //STRUCTS INIT STATS
 string10 CONFIG_JobName[TOTAL_CLASSES] = {
 	"VAGABOND", "SAMURAI", "WARRIOR", "HERO", "ASTROLOGER", "PROPHET"
@@ -43,7 +50,7 @@ string10 CONFIG_JobName[TOTAL_CLASSES] = {
 
 int CONFIG_JobStats[TOTAL_CLASSES][NUMBER_OF_STATS + 1] = {
 	//LVL, HP, END, DXT, STR, INT, FTH;
-	{9, 15, 11, 13, 14, 9, 9},	//Vagabond
+	{9, 15, 11, 13, /*1000*/14, 9, 9},	//Vagabond
 	{9, 12, 13, 15, 12, 9, 8},	//Samurai
 	{8, 11, 11, 16, 10, 10, 8},	//Warrior
 	{7, 14, 12, 9, 16, 7, 8},	//Hero
@@ -116,6 +123,13 @@ string25 CONFIG_ShopDialogue[] = {
 	"ᕙ(‾̀◡‾́)ᕗ"
 };
 
+string25 TEMP_PLAYER_SPRITE[5] = {
+	"      *    *  ",
+	"     ***  *** ",
+	"   * *** * *  ",
+	"     * *   *  ",
+	"    ** **  *  ",
+};
 
 //FUNCTIONS
 void startUp();

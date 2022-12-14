@@ -24,7 +24,7 @@ void printAreaMap(const Player* pPlayer, const Area* pFloor, const int nPlayerPo
 	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
 	printf("\n  ▮ "); printf(UWHITE); printf("%s %d-%d", pFloor->strAreaName, pFloor->nArea, pFloor->nFloor); printf(COLOR_RESET); printSymbols(BARS_WIDTH - (int)strlen(pFloor->strAreaName) - 8, SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮ LV %d %s", pPlayer->sJob.nLevel, pPlayer->sJob.strJob); printSymbols(20 - (int)strlen("▮ LV ") - calcDigits(pPlayer->sJob.nLevel) - (int)strlen(pPlayer->sJob.strJob), SPACE_SYMBOL);
-		printf(" HP: %d", 100); printSymbols(14 - calcDigits(100) - (int)strlen(" HP: "), SPACE_SYMBOL); printf(" ▮");
+		printf(" HP: %d", pPlayer->nCurHP); printSymbols(14 - calcDigits(pPlayer->nCurHP) - (int)strlen(" HP: "), SPACE_SYMBOL); printf(" ▮");
 	printf("\n  ▮ RUNES: %d", pPlayer->nRunes); printSymbols(21 - (int)strlen("▮ RUNES: ") - calcDigits(pPlayer->nRunes), SPACE_SYMBOL); 
 		printf(" POTIONS: %d", pPlayer->sEquipment.nPotions); printSymbols(13 - (int)strlen("POTIONS: ") - calcDigits(pPlayer->sEquipment.nPotions), SPACE_SYMBOL);  printf(" ▮");
 	printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL); printf("\n\n");
@@ -37,6 +37,11 @@ void printAreaMap(const Player* pPlayer, const Area* pFloor, const int nPlayerPo
 	printf("\n\tQ  A  W  S  D  E");
 }
 
+
+/*Prints the tiles based on floor dimesions
+	@param pFloor - Contains floor row and col sizes
+	@param nPlayerPos - The player's index position
+*/
 void printTiles(const Area* pFloor, const int nPlayerPos){
 	int i, j;
 	printf("\n\t");
@@ -76,6 +81,9 @@ void printTiles(const Area* pFloor, const int nPlayerPos){
 	}
 }
 
+/*Determine text color based on tile type
+	@param nTile - The tile type
+*/
 void checkTileColor(const int nTile){
 	switch(nTile){
 		case TILE_INVALID:
@@ -101,6 +109,9 @@ void checkTileColor(const int nTile){
 	}
 }
 
+/*Determine text symbol based on tile type
+	@param nTile - The tile type
+*/
 void printTileContent(const int nTile){
 	switch(nTile){
 		case TILE_INVALID:

@@ -1,5 +1,8 @@
 #include "shop_system.h"
 
+/*Shop title page and redirects to buying/selling
+	@param pPlayer - Contains player's runes and weapons 
+*/
 void getShopOpen(Player* pPlayer){
 	int nChoice;
 	Weapon* pAllWeapons = getAllWeapons();
@@ -26,7 +29,10 @@ void getShopOpen(Player* pPlayer){
 	free(pAllWeapons);
 }
 
-
+	/*Allows players to pick a weapon category
+		@param pPlayer - Contains player runes and weapon inventory
+		@param pAllWeapons - All weapons available to scroll through
+	*/
 	void getShopBuyMenu(Player* pPlayer, Weapon* pAllWeapons){
 			int nChoice;
 			do{
@@ -39,6 +45,11 @@ void getShopOpen(Player* pPlayer){
 			prompt(1);
 		}
 
+			/*Buys and adds chosen weapon to inventory
+				@param pPlayer - Contains player runes and weapon inventory
+				@param aWeapons - Array of available weapons under that category
+				@param nWeaponType - Use for determining weapon sprite
+			*/
 			void getShopBuyWeapons(Player* pPlayer, const Weapon aWeapons[], const int nWeaponType){
 				int nChoice;
 				do{
@@ -58,6 +69,13 @@ void getShopOpen(Player* pPlayer){
 			}
 
 
+				/*Check if player can purchase the weapon
+					@param sPlayer - The player runes to read
+					@param nRuneCost - The cost of the weapon
+					@param nDexCost - Dexterity requirement of the weapon
+					@return 0 - Unable to afford weapon
+							1 - Can afford the weapon
+				*/
 				int checkWeaponPurchase(const Player sPlayer, const int nRuneCost, const int nDexCost){
 					if (sPlayer.nRunes < nRuneCost){
 						prompt(103);
@@ -70,6 +88,10 @@ void getShopOpen(Player* pPlayer){
 					return 1;
 				}
 
+				/*Adds a weapon to player's inventory
+					@param pEquipment - The player's weapons
+					@param nIdentifier - The new weapon type to add
+				*/
 				void addWeapon(Equipment* pEquipment, const int nIdentifier){
 					int i;
 					//Expand dynamic array if already at limit
@@ -93,19 +115,27 @@ void getShopOpen(Player* pPlayer){
 					prompt(106);
 				}
 
-
+				/*Finds an empty inventory slot
+					@param pInventory - The inventory of weapons
+					@param nElements - The size of the inventory
+					@return i - Index for an available slot
+							(-1) - No empty slot available
+				*/
 				int findEmptySlot(const Weapon* pInventory, const int nElements){
 					int i = 1;	//Excluding first slot[0] for equipped items only
 					while(i < nElements){
-						if (pInventory[i].nIdentifier == EMPTY) {printf("\nEMPTY FOUND\n"); return i;}
+						if (pInventory[i].nIdentifier == EMPTY) 
+							{printf("\nEMPTY FOUND\n"); return i;}
 						i++;
 					}
-					printf("\nno EMPTY FOUND\n");
+					//printf("\nno EMPTY FOUND\n");
 					return -1;
 				}
 
 
-
+	/*Display possessed weapons and interpret actions to sell
+		@param pPlayer - Contains player runes and weapons
+	*/
 	void getShopSellWeapons(Player* pPlayer){
 			int nChoice;
 			int nPage = 0;
@@ -139,9 +169,13 @@ void getShopOpen(Player* pPlayer){
 			} while (nChoice);
 		}
 
-
+			/*Sells the weapon.
+				@param pWeapon - pWeapon to alter
+				@param pRunes - Runes to alter
+			*/
 			void sellWeapon(Weapon* pWeapon, int* pRunes){
-				if (pWeapon->nIdentifier == EMPTY){prompt(108); return;}
+				if (pWeapon->nIdentifier == EMPTY)
+					{prompt(108); return;}
 				
 				*pRunes += pWeapon->nRuneCost / 2;
 				setWeaponStats(pWeapon, EMPTY);

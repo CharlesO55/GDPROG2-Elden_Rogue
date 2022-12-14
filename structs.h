@@ -9,7 +9,7 @@ typedef struct JobTag{
     string10 strJob;    //Job class name
     int nLevel;         //Current level
     int nHealth, nEndurance, nDexterity, nStrength, nIntelligence, nFaith;  //Job stats
-    int* pStats[NUMBER_OF_STATS];   //Array of Pointers to the stats. Same as accessing JobClass.nHealth or JobClass->pStats[0]
+    int* pStats[NUMBER_OF_STATS+1];   //Array of Pointers to the stats. Same as accessing JobClass.nHealth or JobClass->pStats[0]
 } JobClass;
 
 
@@ -55,9 +55,11 @@ typedef struct AreaTag{
 typedef struct EnemyTag{
     int nType;
     int nHP;
+    int nCurHP;
     int aAtkRange[2];
     float aDefenses[3];
-    string25 strEnemyName;
+    stringMax strEnemyName;
+    string25 aSprites[5];
 } Enemy;
 
 //FUNCTIONS

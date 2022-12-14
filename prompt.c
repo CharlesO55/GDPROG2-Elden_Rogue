@@ -1,3 +1,7 @@
+
+/*Prompts the color and text response
+	@param nCode - The prompt number identifier
+*/
 void prompt(int nCode){
 	if (nCode >= 0 && nCode < 100){ printf(GREEN);}		//Success prompts
 	else if (nCode >= 100 && nCode < 200){ printf(RED);}	//Switch to red font. Error prompts
@@ -26,6 +30,9 @@ void prompt(int nCode){
 			break;
 		case 7:
 			printf("\n[SYSTEM]: Sold weapon!");
+			break;
+		case 8:
+			printf("\n[SYSTEM]: Changed floors!");
 			break;
 		case 100:
 			printf("\n[ERROR]: Enter a valid input.");
@@ -77,6 +84,9 @@ void prompt(int nCode){
 			break;
 		case 116:
 			printf("\n[ERROR]: Out of potions.");
+			break;
+		case 117:
+			printf("\n[ERROR]: No floor connected.");
 			break;
 		default:
 			printf("\n[ERROR]: Not in prompt options.");
