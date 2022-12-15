@@ -21,14 +21,16 @@ void getFastTravelMenu(Player* pPlayer);
 Area* initArea(const int nArea);
 	void createFloor(const int nArea, const int nFloor, Area* pFloor);
 	void connectFloors(const int nArea, Area* pHead);
+	int findTile(const Area* pFloor, const int nTarget);
 
 void getAreaPlay(Player* pPlayer, const int nAreaChoice/*Area* pHead*/);
-	int findTile(const Area* pFloor, const int nTarget);
 	void movePlayer(const Area* pFloor, const int nAction, int* pPlayerPos);
-	void interactTile(Area *pCurrentFloor, int* pPlayerPos, int* pQuit, Player* pPlayer);
-	void getTreasure(int* pRunes, const int nArea);
-	void setCommonEnemy(const int nArea, Enemy* pEnemy);
-	int getBossWarning();
-	void setBossEnemy(const int nIndex, Enemy* pEnemy);
-	void changeFloor(Area** pCurrentFloor, int* pPlayerPos, const int nTileType);
+	//void interactTile(Area *pCurrentFloor, int* pPlayerPos, int* pQuit, Player* pPlayer);
+	void interactTile(Area** pFloorAddress, Area *pCurrentFloor, int* pPlayerPos, int* pQuit, Player* pPlayer);
+		void getTreasure(int* pRunes, const int nArea);
+		void setCommonEnemy(const int nArea, Enemy* pEnemy);
+		int getBossWarning();
+		void setBossEnemy(const int nIndex, Enemy* pEnemy);
+		void changeFloor(Area** pCurrentFloor, int* pPlayerPos, const int nTileType);
+
 #endif

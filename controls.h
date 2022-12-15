@@ -7,6 +7,8 @@
 #define RIGHT 3
 #define LEFT 4
 #define INTERACT 5
+#define DEBUG_CONTROL_0	6
+#define DEBUG_CONTROL_1	7
 #define FOUND 1
 #define UNFOUND 0
 #define VALID 1

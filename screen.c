@@ -177,113 +177,115 @@ void printShopOpening(const string25 strName, const int nRunes){
 	printf("\n\t0. RETURN TO ROUNDTABLE HOLD");
 }
 	
-	void printShopBuyScreen(const int nRunes){
-		stringMax strDialogue;
-		strcpy(strDialogue, CONFIG_ShopDialogue[generateRNG(0, (sizeof(CONFIG_ShopDialogue) / sizeof(string25)) - 1)]);
+void printShopBuyScreen(const int nRunes){
+	stringMax strDialogue;
+	strcpy(strDialogue, CONFIG_ShopDialogue[generateRNG(0, (sizeof(CONFIG_ShopDialogue) / sizeof(string25)) - 1)]);
 
-		printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
-		printHeader("BUY WEAPONS");
-		printf("\n  ▮ Runes: %d", nRunes); printSymbols(BARS_WIDTH - (int)strlen("▮ Runes: ") - calcDigits(nRunes), SPACE_SYMBOL); printf(" ▮");
-		printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
-		printf(BLUE); printf("\n[SHOPKEEPER]: %s", strDialogue); printf(COLOR_RESET);
-		
-		printf("\n\nWHA'CHA BUYING?");
-		printf("\n\t1. BUY SWORDS");
-		printf("\n\t2. BUY KATANAS");
-		printf("\n\t3. BUY WHIPS");
-		printf("\n\t4. BUY GREATSWORDS");
-		printf("\n\t5. BUY STAVES");
-		printf("\n\t6. BUY SEALS");
-		printf("\n\t0. RETURN");
+	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
+	printHeader("BUY WEAPONS");
+	printf("\n  ▮ Runes: %d", nRunes); printSymbols(BARS_WIDTH - (int)strlen("▮ Runes: ") - calcDigits(nRunes), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
+	printf(BLUE); printf("\n[SHOPKEEPER]: %s", strDialogue); printf(COLOR_RESET);
+	
+	printf("\n\nWHA'CHA BUYING?");
+	printf("\n\t1. BUY SWORDS");
+	printf("\n\t2. BUY KATANAS");
+	printf("\n\t3. BUY WHIPS");
+	printf("\n\t4. BUY GREATSWORDS");
+	printf("\n\t5. BUY STAVES");
+	printf("\n\t6. BUY SEALS");
+	printf("\n\t0. RETURN");
+}
+
+void printShopBuyWeapons(const Weapon aWeapons[], const int nWeaponType, const int nRunes){
+	displayWeapons(aWeapons);
+
+	printf(UWHITE);
+	printf("\n   %s", CONFIG_WeaponTypes[nWeaponType-1]);
+	printSymbols(26 - (int)strlen(CONFIG_WeaponTypes[nWeaponType-1]), SPACE_SYMBOL);
+	printf("RUNE COST   DEX REQ");
+	printf(COLOR_RESET);
+
+
+	int i;			
+	for (i = 0; i < TOTAL_WEAPONS_TYPES_CHOICES; i++){
+		if(nRunes < aWeapons[i].nRuneCost){ printf(RED);}
+		printf("\n%d. %s ", i + 1, aWeapons[i].strWeaponName);	
+		printSymbols(25 - (int)strlen(aWeapons[i].strWeaponName), SPACE_SYMBOL);	
+		printf("%d", aWeapons[i].nRuneCost);
+		printSymbols(12 - calcDigits(aWeapons[i].nRuneCost), SPACE_SYMBOL);
+		printf("%d", aWeapons[i].nDexCost);
 	}
+	printf(COLOR_RESET);
+	printf("\n0. CHECK OTHER WEAPONS");
+}
 
-		void printShopBuyWeapons(const Weapon aWeapons[], const int nWeaponType, const int nRunes){
-			displayWeapons(aWeapons);
+void printShopSellScreen(const Player* pPlayer, const int nPage){
+	printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
+	printHeader("SELL WEAPONS");
+	printf("\n  ▮ RUNES: %d", pPlayer->nRunes); printSymbols(BARS_WIDTH - (int)strlen("▮ RUNES: ") - calcDigits(pPlayer->nRunes), SPACE_SYMBOL); printf(" ▮");
+	printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
 
-			printf(UWHITE);
-			printf("\n   %s", CONFIG_WeaponTypes[nWeaponType-1]);
-			printSymbols(26 - (int)strlen(CONFIG_WeaponTypes[nWeaponType-1]), SPACE_SYMBOL);
-			printf("RUNE COST   DEX REQ");
-			printf(COLOR_RESET);
+	displayWeapons(pPlayer->sEquipment.pWeaponInventory+(nPage*4+1));
 
+	printf(UWHITE); printf("\nPAGE %d EQUIPMENT: ", nPage);	printSymbols(19, SPACE_SYMBOL); printf("RUNES");
+	printf(COLOR_RESET);
 
-			int i;			
-			for (i = 0; i < TOTAL_WEAPONS_TYPES_CHOICES; i++){
-				if(nRunes < aWeapons[i].nRuneCost){ printf(RED);}
-				printf("\n%d. %s ", i + 1, aWeapons[i].strWeaponName);	
-				printSymbols(25 - (int)strlen(aWeapons[i].strWeaponName), SPACE_SYMBOL);	
-				printf("%d", aWeapons[i].nRuneCost);
-				printSymbols(12 - calcDigits(aWeapons[i].nRuneCost), SPACE_SYMBOL);
-				printf("%d", aWeapons[i].nDexCost);
-			}
-			printf(COLOR_RESET);
-			printf("\n0. CHECK OTHER WEAPONS");
-		}
+	int i;
+	for (i = 1; i < 5; i++){
+		printf("\n\t%d. %s ", i, pPlayer->sEquipment.pWeaponInventory[nPage*4 + i].strWeaponName);	
+		printSymbols(25 - (int)strlen(pPlayer->sEquipment.pWeaponInventory[nPage*4 + i].strWeaponName), SPACE_SYMBOL);	
+		printf("%d", pPlayer->sEquipment.pWeaponInventory[nPage*4 + i].nRuneCost / 2);
+	} 
 
-	void printShopSellScreen(const Player* pPlayer, const int nPage){
-		printf("\n\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
-		printHeader("SELL WEAPONS");
-		printf("\n  ▮ RUNES: %d", pPlayer->nRunes); printSymbols(BARS_WIDTH - (int)strlen("▮ RUNES: ") - calcDigits(pPlayer->nRunes), SPACE_SYMBOL); printf(" ▮");
-		printf("\n  "); printSymbols(BARS_WIDTH, BAR_SYMBOL);
+	printf("\n5. PREV PAGE");
+	printf("\n6. NEXT PAGE");
+	printf("\n0. CANCEL");
+}
 
-		displayWeapons(pPlayer->sEquipment.pWeaponInventory+(nPage*4+1));
+void displayWeapons(const Weapon aWeapons[]){
+					//4 weapons //3 lines each
+	int nLines = 2;
+	char strStore[4][nLines][WEAPON_ICON_WIDTH+1];
 
-		printf(UWHITE); printf("\nPAGE %d EQUIPMENT: ", nPage);	printSymbols(19, SPACE_SYMBOL); printf("RUNES");
-		printf(COLOR_RESET);
-
-		int i;
-		for (i = 1; i < 5; i++){
-			printf("\n\t%d. %s ", i, pPlayer->sEquipment.pWeaponInventory[nPage*4 + i].strWeaponName);	
-			printSymbols(25 - (int)strlen(pPlayer->sEquipment.pWeaponInventory[nPage*4 + i].strWeaponName), SPACE_SYMBOL);	
-			printf("%d", pPlayer->sEquipment.pWeaponInventory[nPage*4 + i].nRuneCost / 2);
-		} 
-
-		printf("\n5. PREV PAGE");
-		printf("\n6. NEXT PAGE");
-		printf("\n0. CANCEL");
-	}
-
-	void displayWeapons(const Weapon aWeapons[]){
-						//4 weapons //3 lines each
-		int nLines = 2;
-		char strStore[4][nLines][WEAPON_ICON_WIDTH+1];
-
-		int i, j;
-		for (i = 0; i < 4; i++){
-			int nNameLen = (int)strlen(aWeapons[i].strWeaponName);
-			for (j = 0; j < nLines; j++){
-				strncpy(strStore[i][j], aWeapons[i].strWeaponName + (WEAPON_ICON_WIDTH * j), WEAPON_ICON_WIDTH);
-				
-				if(strStore[i][j][0] == ' '){ strcpy(strStore[i][j], strStore[i][j] + 1);  }
-				if(j * WEAPON_ICON_WIDTH > nNameLen) {strcpy(strStore[i][j], "        "); }
-
-				fillText(strStore[i][j], WEAPON_ICON_WIDTH);
-				strStore[i][j][WEAPON_ICON_WIDTH] = '\0';
-			}
-		}
-		
-
-		printf("\n\n"); printSymbols(WEAPON_ICON_WIDTH*4+5, BAR_SYMBOL);
-		printf("\n▮"); printf("1"); printSymbols(WEAPON_ICON_WIDTH-1, SPACE_SYMBOL); printf("▮");
-						printf("2"); printSymbols(WEAPON_ICON_WIDTH-1, SPACE_SYMBOL); printf("▮");
-						printf("3"); printSymbols(WEAPON_ICON_WIDTH-1, SPACE_SYMBOL); printf("▮");
-						printf("4"); printSymbols(WEAPON_ICON_WIDTH-1, SPACE_SYMBOL); printf("▮");
+	int i, j;
+	for (i = 0; i < 4; i++){
+		int nNameLen = (int)strlen(aWeapons[i].strWeaponName);
 		for (j = 0; j < nLines; j++){
-			printf("\n▮%s▮%s▮%s▮%s▮", strStore[0][j], strStore[1][j], strStore[2][j], strStore[3][j]);
+			strncpy(strStore[i][j], aWeapons[i].strWeaponName + (WEAPON_ICON_WIDTH * j), WEAPON_ICON_WIDTH);
+			
+			if(strStore[i][j][0] == ' '){ strcpy(strStore[i][j], strStore[i][j] + 1);  }
+			if(j * WEAPON_ICON_WIDTH > nNameLen) {strcpy(strStore[i][j], "        "); }
+
+			fillText(strStore[i][j], WEAPON_ICON_WIDTH);
+			strStore[i][j][WEAPON_ICON_WIDTH] = '\0';
 		}
-
-		printf("\n"); printSymbols(WEAPON_ICON_WIDTH*4+5, BAR_SYMBOL);
-		printf("\n");
-		string10 strWords[NUMBER_OF_STATS] = { " HP", "END", "DEX", "STR", "INT", "FTH" };
-
-		for (i = 0; i < NUMBER_OF_STATS; i++){
-			for (j = 0; j < 4; j++){
-				 printStatLine(aWeapons[j].aStats[i], strWords[i]);
-			} printf("▮\n");
-		}
-
-		printSymbols(WEAPON_ICON_WIDTH*4+5, BAR_SYMBOL);
 	}
+		
+
+	printf("\n\n"); printSymbols(WEAPON_ICON_WIDTH*4+5, BAR_SYMBOL);
+	printf("\n▮"); printf("1"); printSymbols(WEAPON_ICON_WIDTH-1, SPACE_SYMBOL); printf("▮");
+					printf("2"); printSymbols(WEAPON_ICON_WIDTH-1, SPACE_SYMBOL); printf("▮");
+					printf("3"); printSymbols(WEAPON_ICON_WIDTH-1, SPACE_SYMBOL); printf("▮");
+					printf("4"); printSymbols(WEAPON_ICON_WIDTH-1, SPACE_SYMBOL); printf("▮");
+	for (j = 0; j < nLines; j++){
+		printf("\n▮%s▮%s▮%s▮%s▮", strStore[0][j], strStore[1][j], strStore[2][j], strStore[3][j]);
+	}
+
+	printf("\n"); printSymbols(WEAPON_ICON_WIDTH*4+5, BAR_SYMBOL);
+	printf("\n");
+	string10 strWords[NUMBER_OF_STATS] = { " HP", "END", "DEX", "STR", "INT", "FTH" };
+
+	for (i = 0; i < NUMBER_OF_STATS; i++){
+		for (j = 0; j < 4; j++){
+			 printStatLine(aWeapons[j].aStats[i], strWords[i]);
+		} printf("▮\n");
+	}
+
+	printSymbols(WEAPON_ICON_WIDTH*4+5, BAR_SYMBOL);
+}
+
+
 
 void fillText(char strText[], const int nSize){
 	while((int)strlen(strText) < nSize){
@@ -291,9 +293,11 @@ void fillText(char strText[], const int nSize){
 	}
 }
 
+
 void printStatLine(const int nNum, const char strText[]){
 	printf("▮  %s : %d", strText, nNum); printSymbols(WEAPON_ICON_WIDTH - calcDigits(nNum) - 5 - (int)strlen(strText), SPACE_SYMBOL);
 }
+
 
 void printHeader(const stringMax strName){
 	printf("\n  ▮ "); printf(UWHITE); printf("%s", strName); printf(COLOR_RESET); printSymbols(BARS_WIDTH - (int)strlen(strName) - 4, SPACE_SYMBOL); printf(" ▮");

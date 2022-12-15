@@ -25,7 +25,8 @@ typedef char string10[11];
 #define GRAY 		"\e[1;30m"
 #define COLOR_RESET "\e[0m"
 
-
+//WEAPON IDENTIFIERS
+#define EMPTY -1
 #define SWORD 1
 #define KATANA 2
 #define WHIP 3
@@ -33,7 +34,7 @@ typedef char string10[11];
 #define STAFF 5
 #define SEAL 6
 
-#define EMPTY -1
+
 
 #define STARTING_INVENTORY_SIZE 5
 

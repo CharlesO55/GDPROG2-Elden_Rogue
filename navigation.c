@@ -5,6 +5,7 @@
 #include "Menus/levelling_system.c"
 #include "Menus/inventory_system.c"
 #include "Menus/shop_system.c"
+#include "Menus/save_system.c"
 
 
 
@@ -25,6 +26,7 @@ void getTitleScreen(){
 				getCharCreationScreen(&sPlayer);
 				break;
 			case 2:	//Continue
+				getLoadCharacter(&sPlayer);
 				prompt(2);
 				break;
 			case 0:	//Exit
@@ -64,6 +66,7 @@ void getRoundTable(Player* pPlayer){
 				break;
 			case 5:	//Save
 				prompt(2);
+				getSaveMenu(pPlayer);
 				break;
 			case 0:	//Return to title
 				prompt(1);

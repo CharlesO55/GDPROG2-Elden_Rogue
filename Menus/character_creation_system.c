@@ -54,41 +54,42 @@ void getCharCreationScreen(Player* pPlayer){
 }
 
 
-	/*Read all jobs and let player choose which they want
-		@param pPlayerJob - The job struct to alter
-	*/
-	void selectJobClass(JobClass *pPlayerJob){
-		int nChoice = VALID;
 
-		JobClass *pJobList = getAllJobs();
+/*Read all jobs and let player choose which they want
+	@param pPlayerJob - The job struct to alter
+*/
+void selectJobClass(JobClass *pPlayerJob){
+	int nChoice = VALID;
 
-		do{
-			printJobSelectorScreen(*pPlayerJob);
-			scanIntChoice(&nChoice, 0, TOTAL_CLASSES);
+	JobClass *pJobList = getAllJobs();
 
-			switch(nChoice){
-				case 1:
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-				case 6:
-					setJobStats(pPlayerJob, 
-						pJobList[nChoice-1].nLevel, 
-						pJobList[nChoice-1].nHealth, 
-						pJobList[nChoice-1].nEndurance, 
-						pJobList[nChoice-1].nDexterity, 
-						pJobList[nChoice-1].nStrength, 
-						pJobList[nChoice-1].nIntelligence, 
-						pJobList[nChoice-1].nFaith, 
-						pJobList[nChoice-1].strJob);
-					break;
-				case 0: //Exit
-					prompt(1);
-					free(pJobList);	//Free the initialized job lists
-					return;
-				default:
-					prompt(102);
-			}
-		} while (nChoice);
-	}
+	do{
+		printJobSelectorScreen(*pPlayerJob);
+		scanIntChoice(&nChoice, 0, TOTAL_CLASSES);
+
+		switch(nChoice){
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+				setJobStats(pPlayerJob, 
+					pJobList[nChoice-1].nLevel, 
+					pJobList[nChoice-1].nHealth, 
+					pJobList[nChoice-1].nEndurance, 
+					pJobList[nChoice-1].nDexterity, 
+					pJobList[nChoice-1].nStrength, 
+					pJobList[nChoice-1].nIntelligence, 
+					pJobList[nChoice-1].nFaith, 
+					pJobList[nChoice-1].strJob);
+				break;
+			case 0: //Exit
+				prompt(1);
+				free(pJobList);	//Free the initialized job lists
+				return;
+			default:
+				prompt(102);
+		}
+	} while (nChoice);
+}

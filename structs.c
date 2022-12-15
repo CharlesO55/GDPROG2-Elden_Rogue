@@ -20,19 +20,21 @@ void setPlayerStats(Player* pPlay, string25 strNewName, int nNewRunes, int aNewS
 }
 
 
-	void repackageStats(Player* pPlayer){
-	    pPlayer->sJob.pStats[0] = &(pPlayer->sJob.nLevel);
-	    pPlayer->sJob.pStats[1] = &(pPlayer->sJob.nHealth);
-	    pPlayer->sJob.pStats[2] = &(pPlayer->sJob.nEndurance);
-	    pPlayer->sJob.pStats[3] = &(pPlayer->sJob.nDexterity);
-	    pPlayer->sJob.pStats[4] = &(pPlayer->sJob.nStrength);
-	    pPlayer->sJob.pStats[5] = &(pPlayer->sJob.nIntelligence);
-	    pPlayer->sJob.pStats[6] = &(pPlayer->sJob.nFaith);
-	}
+/*Repackage the player's stats into easily accesible array of pointers
+	@param pPlayer - Contains the player's job stats 
+*/
+void repackageStats(Player* pPlayer){
+    pPlayer->sJob.pStats[0] = &(pPlayer->sJob.nLevel);
+    pPlayer->sJob.pStats[1] = &(pPlayer->sJob.nHealth);
+    pPlayer->sJob.pStats[2] = &(pPlayer->sJob.nEndurance);
+    pPlayer->sJob.pStats[3] = &(pPlayer->sJob.nDexterity);
+    pPlayer->sJob.pStats[4] = &(pPlayer->sJob.nStrength);
+    pPlayer->sJob.pStats[5] = &(pPlayer->sJob.nIntelligence);
+    pPlayer->sJob.pStats[6] = &(pPlayer->sJob.nFaith);
+}
 
 
-/*
-    INITIALIZES BEGINNING STATS OF THE JOBS
+/*INITIALIZES BEGINNING STATS OF THE JOBS
     @aJobList - Memory allocated array containing copied data of job instances
     RETURNS ADDRESS OF ARRAY OF JOB INSTANCES LIST
 */
@@ -57,28 +59,32 @@ JobClass* getAllJobs(){
     return pAllJobs;
 }
 
-	/*
-	    ALTERS JOB CLASS VARIABLES VALUE
-	    @sJob - JobClass instance to be altered (instance address)
-	    @nLVL, nHP, nEND, nDEX, nSTR, nINT, nFTH - Int values to be assigned (>= 0)
-	    @strJobName - String name of the job (10 char)
-	*/
-	void setJobStats(JobClass *sJob, int nLVL, int nHP, int nEND, int nDEX, int nSTR, int nINT, int nFTH, string10 strJobName){
-	    sJob->nLevel = nLVL;     //Change struct variable value via pointer
-	    sJob->nHealth = nHP;
-	    sJob->nEndurance = nEND;
-	    sJob->nDexterity = nDEX;
-	    sJob->nStrength = nSTR;
-	    sJob->nIntelligence = nINT;
-	    sJob->nFaith = nFTH;
-	    strcpy(sJob->strJob, strJobName);
-	}
+/*ALTERS JOB CLASS VARIABLES VALUE
+    @sJob - JobClass instance to be altered (instance address)
+    @nLVL, nHP, nEND, nDEX, nSTR, nINT, nFTH - Int values to be assigned (>= 0)
+    @strJobName - String name of the job (10 char)
+*/
+void setJobStats(JobClass *sJob, int nLVL, int nHP, int nEND, int nDEX, int nSTR, int nINT, int nFTH, string10 strJobName){
+    sJob->nLevel = nLVL;     //Change struct variable value via pointer
+    sJob->nHealth = nHP;
+    sJob->nEndurance = nEND;
+    sJob->nDexterity = nDEX;
+    sJob->nStrength = nSTR;
+    sJob->nIntelligence = nINT;
+    sJob->nFaith = nFTH;
+    strcpy(sJob->strJob, strJobName);
+}
 
 
+/*Generates all weapons
+	@retrun Weapon - The very first weapon
+*/
 Weapon* getAllWeapons(){
+	//CALC HOW MANY WEAPONS IN TOTAL AND PREPARE A PERSISTENT INSTANCE
 	int nTotalWeapons = TOTAL_WEAPONS_TYPES_CHOICES * TOTAL_WEAPONS_TYPES;
 	Weapon* pAllWeapon = malloc(sizeof(Weapon) * nTotalWeapons);
 
+	//SET THE WEAPON'S STATS
 	int i;
 	for (i = 0; i < nTotalWeapons; i++){
 		setWeaponStats(pAllWeapon+i, i);
@@ -86,37 +92,43 @@ Weapon* getAllWeapons(){
 	return pAllWeapon;
 }
 
+/*Sets the weapons stats based on index
+	@param pWeapon - Weapon to modify
+	@param nIndex - To identify the weapon
+*/
+void setWeaponStats(Weapon* pWeapon, int nIndex){
+	pWeapon->nIdentifier = nIndex;
+	int i;
 
-	void setWeaponStats(Weapon* pWeapon, int nIndex){
-		pWeapon->nIdentifier = nIndex;
-		int i;
+	//SET EMPTY WEAPONS
+	if(nIndex == EMPTY){
+		strcpy(pWeapon->strWeaponName, "EMPTY");
+		pWeapon->nRuneCost = 0;
+	 		pWeapon->nDexCost = 0;
 
-		if(nIndex == EMPTY){
-			strcpy(pWeapon->strWeaponName, "EMPTY");
-    		pWeapon->nRuneCost = 0;
-   	 		pWeapon->nDexCost = 0;
-
-   	 		for (i = 0; i < NUMBER_OF_STATS; i++){
-    			pWeapon->aStats[i] = 0;
-    		} 
-    		return;
-		}
-
-
-		int nRow = nIndex / TOTAL_WEAPONS_TYPES_CHOICES;
-		int nCol = nIndex % TOTAL_WEAPONS_TYPES_CHOICES;
-
-		strcpy(pWeapon->strWeaponName, CONFIG_WeaponName[nRow][nCol]);
-    	pWeapon->nRuneCost = CONFIG_WeaponRuneCost[nRow][nCol];
-   	 	pWeapon->nDexCost = CONFIG_WeaponDexterityReq[nRow][nCol];
-
-    	
-    	for (i = 0; i < NUMBER_OF_STATS; i++){
-    		pWeapon->aStats[i] = CONFIG_WeaponStats[nRow][nCol][i];
-    	}
+	 		for (i = 0; i < NUMBER_OF_STATS; i++){
+			pWeapon->aStats[i] = 0;
+		} 
+		return;
 	}
 
+	//SET WEAPONS BASED ON INDEX
+	int nRow = nIndex / TOTAL_WEAPONS_TYPES_CHOICES;
+	int nCol = nIndex % TOTAL_WEAPONS_TYPES_CHOICES;
 
+	strcpy(pWeapon->strWeaponName, CONFIG_WeaponName[nRow][nCol]);
+	pWeapon->nRuneCost = CONFIG_WeaponRuneCost[nRow][nCol];
+ 	pWeapon->nDexCost = CONFIG_WeaponDexterityReq[nRow][nCol];
+
+	
+	for (i = 0; i < NUMBER_OF_STATS; i++){
+		pWeapon->aStats[i] = CONFIG_WeaponStats[nRow][nCol][i];
+	}
+}
+
+/*Calc max health and set the cur hp
+	@param pPlayer - Contains the player's health related stats
+*/
 void resetHealth(Player* pPlayer){
 	pPlayer->nCurHP = 100 * ((pPlayer->sJob.nHealth + pPlayer->sEquipment.pWeaponInventory->aStats[0]) / 2);
 	//printf("HP: %d from %d and %d\n", pPlayer->nCurHP, pPlayer->sJob.nHealth, pPlayer->sEquipment.pWeaponInventory->aStats[0]);

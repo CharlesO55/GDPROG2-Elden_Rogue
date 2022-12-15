@@ -17,6 +17,7 @@ void getInventoryMenu(Equipment* pEquipment, const int nDex){
 		scanIntChoice(&nChoice, 0, 7);
 
 		switch(nChoice){
+			//CHOOSE TO EQUIP
 			case 1:
 			case 2:
 			case 3:
@@ -35,6 +36,7 @@ void getInventoryMenu(Equipment* pEquipment, const int nDex){
 
 				else{ prompt(110); }
 				break;
+			//UNEQUIP
 			case 5:
 				if (pEquipment->pWeaponInventory->nIdentifier != EMPTY){
 					addWeapon(pEquipment, pEquipment->pWeaponInventory->nIdentifier);	//Readd the weapon to list
@@ -43,10 +45,12 @@ void getInventoryMenu(Equipment* pEquipment, const int nDex){
 				}
 				else{ prompt(109); }
 				break;
+			//PREV PAGE
 			case 6:
 				if (nPage > 0){nPage--;}
 				else {prompt(107);}
 				break;
+			//NEXT PAGE
 			case 7:
 				if (nPage < (int)(pEquipment->nInventoryCapacity / 4)-1){nPage++;}
 				else {prompt(107);}

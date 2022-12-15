@@ -12,41 +12,63 @@ int startBattle(Enemy* pEnemy, Player* pPlayer, Area* pFloor){
 	int nDmg;
 	int nDodged;
 
+	//BATTLE LOOP
 	do {
+		//CALC ENEMY'S DMG TO DEAL
 		nDmg = calcDamage(pEnemy, pFloor->nArea);
+
 		printBattleScreen(pEnemy, pPlayer, pFloor);
 		printBattleChoices(nDmg, pPlayer->sEquipment.nPotions);
 		
+		//PLAYER'S MOVE TURN + ATTACK PHASE
 		getPlayerTurn(pPlayer, pEnemy, &nDodged);
 
+		//CHECK IF ENEMY DIED
 		if (isGameOver(pPlayer, pEnemy))
 			{break;}
 		
-		takeDamage(pPlayer, nDmg);
+
+		//ENEMY'S TURN
+		if (!nDodged){
+			//DAMAGE PLAYER ONLY WHEN NOT DODGING
+			takeDamage(pPlayer, nDmg);	
+		}
+		//RESET DODGE IF PLAYER DID DODGE
 		nDodged = INVALID;
+		
+	//CHECK IF PLAYER DIED
 	} while(!isGameOver(pPlayer, pEnemy));
 
+	//CALC RUNE/SHARD RESULTS
 	return calcResults(pPlayer, pEnemy, pFloor->nArea);
 }
 
 
+/*Calculate battle's results and adjust runes and shards
+	@pPlayer - Contains player's runes and shards
+	@pEnemy - Check enemy's max health and type
+	@nArea - Area index for assigning shards
+*/
 int calcResults(Player* pPlayer, Enemy* pEnemy, const int nArea){
+	//PLAYER DIED
 	if (pPlayer->nCurHP <= 0){
+		//RESET RUNES
 		pPlayer->nRunes = 0;
 		printf(RED); printf("\n[RESULT] YOU DIED.\nLOST ALL RUNES"); printf(COLOR_RESET);
 		return 0;	//LOST
 	}
 
+	//COMMON ENEMY WAS DEFEATED
 	if(pEnemy->nType < BOSS){
 		pPlayer->nRunes += pEnemy->nHP * 2;
 		printf(GREEN); printf("\n[RESULT] ENEMY FELLED\n[REWARD] %d RUNES EARNED", pEnemy->nHP * 2); printf(COLOR_RESET);
 	}
-	/*else if (){
-
-	}*/
+	//BOSS WAS DEFEATED
 	else{
+		//GAIN RUNES
 		pPlayer->nRunes += pEnemy->nHP * 5;
 		printf(GREEN); printf("\n[RESULT] GREAT ENEMY FELLED\n[REWARD]%d RUNES EARNED", pEnemy->nHP * 5); printf(COLOR_RESET);
+		//UNLOCK AREA SHARD
 		pPlayer->aShards[nArea] = VALID;
 	}
 
@@ -64,6 +86,7 @@ void getPlayerTurn(Player* pPlayer, Enemy* pEnemy, int* pDodged){
 	do {
 		scanIntChoice(&nChoice, 1, 3);
 
+		//PLAYER CHOICES
 		switch(nChoice){
 			case 1:
 				useAttack(pPlayer, pEnemy);
@@ -73,7 +96,9 @@ void getPlayerTurn(Player* pPlayer, Enemy* pEnemy, int* pDodged){
 				*pDodged = useDodge(pPlayer);
 				nEndTurn = VALID;
 				break;
+			//WILL NOT END TURN
 			case 3:
+				//SCREEN DOESN'T UPDATE SINCE TURN HASN'T ENDED
 				usePotion(pPlayer);
 				break;
 			default:
@@ -97,6 +122,7 @@ void useAttack(Player* pPlayer, Enemy* pEnemy){
 		case 1: 	//Strength based physical
 		case 2: 	//Intelligence based sorcery
 		case 3:		//Faith based incantation
+			//CALCULATE PLAYER'S ATK FROM WEAPON AND STATS THEN DMG THE ENEMY
 			nAtk = calcAttack(*(pPlayer->sJob.pStats[nChoice + 3]), 
 							  pPlayer->sEquipment.pWeaponInventory->aStats[nChoice + 2], 
 							  pEnemy->aDefenses[nChoice-1]);
@@ -126,10 +152,13 @@ int calcAttack(const int nPlayerStat, const int nWeaponStat, const float fEnemyD
 */
 void damageEnemy(Enemy* pEnemy, const int nAtk){
 	pEnemy->nCurHP -= nAtk;
+	//MAKE SURE DOESN'T GO NEGATIVE
 	if (pEnemy->nCurHP < 0)
 		{pEnemy->nCurHP = 0;}
 }
 
+/*Prints attack choices
+*/
 void printAttackChoices(){
 	printf("\n  "); printf(UWHITE); printf("ATTACK:"); printf(COLOR_RESET);
 	printf("\n\t1. PHYSICAL");
@@ -140,12 +169,14 @@ void printAttackChoices(){
 
 /*Returns damage enemy will do
 	@param pEnemy - Contains enemy type and atk rng range
-	@param nArea - The current area number (increment by 1 needed)
+	@param nArea - The current area index (increment by 1 needed)
 	@return nDmg - Damage enemy will deal
 */
 int calcDamage(const Enemy* pEnemy, const int nArea){
+	//RNG BETWEEN ENEMY ATK RANGE
 	int nDmg = generateRNG(pEnemy->aAtkRange[0], pEnemy->aAtkRange[1]);
 	
+	//MULTIPLY EFFECT DEPENDING ON AREA INDEX FOR COMMON ENEMIES ONLY
 	if (pEnemy->nType != BOSS)
 		{nDmg *= (nArea + 1);}
 
@@ -159,6 +190,8 @@ int calcDamage(const Enemy* pEnemy, const int nArea){
 */
 void takeDamage(Player* pPlayer, const int nDmg){
 	pPlayer->nCurHP -= nDmg;
+
+	//MAKE SURE PLAYER HEALTH DOESN'T GO NEGATIVE
 	if (pPlayer->nCurHP < 0)
 		{pPlayer->nCurHP = 0;}
 
@@ -172,17 +205,19 @@ void takeDamage(Player* pPlayer, const int nDmg){
 			INVALID - Failed to dodge
 */
 int useDodge(const Player* pPlayer){
+	//PLAYER'S DODGE VALUE
 	float fDodge = ((pPlayer->sJob.nEndurance + pPlayer->sEquipment.pWeaponInventory->aStats[1]) / 2.0 + 20) / 100;
+	//RNG VALUE
 	float fRNG = (float)generateRNG(1, 100);
 
+	//DODGED THE RNG
 	if (fRNG <= fDodge){
 		printf("\n[DODGE] %.2f vs %.2f SUCCESFULLY DODGED!", fDodge, fRNG);
 		return VALID;
 	}
-	else{
-		printf("\n[DODGE] %.2f vs %.2f DODGE FAILED!", fDodge, fRNG);
-		return INVALID;
-	}
+	//FAILED TO DODGE
+	printf("\n[DODGE] %.2f vs %.2f DODGE FAILED!", fDodge, fRNG);
+	return INVALID;
 }
 
 /*Calculates player's max health
@@ -200,15 +235,19 @@ int calcMaxHealth(const Player* pPlayer){
 	     OR INVALID - Unable to heal
 */
 int usePotion(Player* pPlayer){
+	//CHECK PLAYER POTION STOCK
 	if (pPlayer->sEquipment.nPotions <= 0)
 		{prompt(116); return INVALID;}
+
+	//DEDUCT ONE
 	pPlayer->sEquipment.nPotions -= 1;
 
+	//RESTORE BASED ON 25-50% OF MAX HP
 	int nMax = calcMaxHealth(pPlayer);
-
 	int nRestore = (int)(nMax * (generateRNG(25, 50) / 100.0));
 	pPlayer->nCurHP += nRestore;
 
+	//DO NOT EXCEED MAX HP
 	if(pPlayer->nCurHP > nMax)
 		{ pPlayer->nCurHP = nMax; }
 	printf("\n[BATTLE] RESTORED %d HP! %d POTIONS REMAINING.", nRestore, pPlayer->sEquipment.nPotions);
@@ -222,6 +261,7 @@ int usePotion(Player* pPlayer){
 	@return INVALID (STILL ALIVE)
 */
 int isGameOver(Player* pPlayer, const Enemy* pEnemy){
+	//EITHER ENEMY OR PLAYER DIED
 	if (pPlayer->nCurHP <= 0 || pEnemy->nCurHP <= 0)
 		{ return VALID; }
 
@@ -263,6 +303,7 @@ void printBattleScreen(const Enemy* pEnemy, const Player* pPlayer, const Area* p
 	@param nCurHP - Current hp
 */
 void printHealthBar(const int nMaxHP, const int nCurHP){
+	//CHUNKS OF 10% HP SYMBOLS
 	float fPartitions = nMaxHP / 10.0;
 	int i;
 
@@ -294,17 +335,20 @@ void printBattleChoices(const int nDmg, const int nPotions){
 	@return strOutput - Persistent String to return
 */
 char* splitText(const char strInput[], const int nLettersPerLine, const int nLineNumber){
+	//PREPARE A PERSISTENT COPY OF THE STRING
 	char* strOutput = malloc(sizeof(char)*nLettersPerLine + 1);
 
+	//STRINGS THAT MATCH THE SIZE OR MORE
 	if((int)strlen(strInput) >= nLettersPerLine*nLineNumber){
 		strncpy(strOutput, strInput+(nLettersPerLine*nLineNumber), nLettersPerLine); 
 		strOutput[nLettersPerLine] = '\0';
 	}
+	//STRINGS THAT DON'T AKA JUST EMPTY SPACES
 	else{
 		strOutput[0] = '\0';
 	}
-
 	
+	//FILL ANY GAPS WITH SPACES
 	while((int)strlen(strOutput) < nLettersPerLine){
 		strcat(strOutput, " ");
 	}
