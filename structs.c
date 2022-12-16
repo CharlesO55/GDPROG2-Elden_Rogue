@@ -1,21 +1,33 @@
 #include "structs.h"
 
-void setPlayerStats(Player* pPlay, string25 strNewName, int nNewRunes, int aNewShards[MAX_SHARDS], JobClass sNewJob){
-    strcpy(pPlay->strPlayerName, strNewName);
-    pPlay->nRunes = nNewRunes;
-    pPlay->sJob = sNewJob;
 
-    pPlay->sEquipment.nInventoryCapacity = STARTING_INVENTORY_SIZE;
-    pPlay->sEquipment.nInventoryUsedSlots = 0;
-    pPlay->sEquipment.pWeaponInventory = malloc(sizeof(Weapon) * STARTING_INVENTORY_SIZE);
+/*Sets the player struct stats for character creation
+	@param pPlayer - Player values to be assigned
+	@param strNewName - Name to assign
+	@param nNewRune - Runes to assign
+	@param aNewShards - Shard values to assign
+	@param sNewJob - Job to copy
+*/
+void setPlayerStats(Player* pPlayer, const string25 strNewName, const int nNewRunes, const int aNewShards[MAX_SHARDS], const JobClass sNewJob){
+    //ASSIGN RUNES, NAME, JOB
+    strcpy(pPlayer->strPlayerName, strNewName);
+    pPlayer->nRunes = nNewRunes;
+    pPlayer->sJob = sNewJob;
 
+    //SET WEAPONS NEEDED PARAMETERS
+    pPlayer->sEquipment.nInventoryCapacity = STARTING_INVENTORY_SIZE;
+    pPlayer->sEquipment.nInventoryUsedSlots = 0;
+    pPlayer->sEquipment.pWeaponInventory = malloc(sizeof(Weapon) * STARTING_INVENTORY_SIZE);
+
+    //INIT THE WEAPONS AS ALL EMPTY
     int i;
     for (i = 0; i < STARTING_INVENTORY_SIZE; i++){
-    	setWeaponStats(pPlay->sEquipment.pWeaponInventory+i, EMPTY);
+    	setWeaponStats(pPlayer->sEquipment.pWeaponInventory+i, EMPTY);
     }
 
+    //ASSIGN THE SHARDS
     for (i = 0; i < MAX_SHARDS; i++){
-        pPlay->aShards[i] = aNewShards[i];
+        pPlayer->aShards[i] = aNewShards[i];
     }
 }
 
@@ -34,9 +46,10 @@ void repackageStats(Player* pPlayer){
 }
 
 
+
 /*INITIALIZES BEGINNING STATS OF THE JOBS
     @aJobList - Memory allocated array containing copied data of job instances
-    RETURNS ADDRESS OF ARRAY OF JOB INSTANCES LIST
+    @return - First address of job list
 */
 JobClass* getAllJobs(){
     //INSTANCE THE JOBclasses STRUCTS
@@ -64,7 +77,7 @@ JobClass* getAllJobs(){
     @nLVL, nHP, nEND, nDEX, nSTR, nINT, nFTH - Int values to be assigned (>= 0)
     @strJobName - String name of the job (10 char)
 */
-void setJobStats(JobClass *sJob, int nLVL, int nHP, int nEND, int nDEX, int nSTR, int nINT, int nFTH, string10 strJobName){
+void setJobStats(JobClass *sJob, const int nLVL, const int nHP, const int nEND, const int nDEX, const int nSTR, const int nINT, const int nFTH, const string10 strJobName){
     sJob->nLevel = nLVL;     //Change struct variable value via pointer
     sJob->nHealth = nHP;
     sJob->nEndurance = nEND;
@@ -92,11 +105,13 @@ Weapon* getAllWeapons(){
 	return pAllWeapon;
 }
 
+
+
 /*Sets the weapons stats based on index
 	@param pWeapon - Weapon to modify
 	@param nIndex - To identify the weapon
 */
-void setWeaponStats(Weapon* pWeapon, int nIndex){
+void setWeaponStats(Weapon* pWeapon, const int nIndex){
 	pWeapon->nIdentifier = nIndex;
 	int i;
 
@@ -125,6 +140,8 @@ void setWeaponStats(Weapon* pWeapon, int nIndex){
 		pWeapon->aStats[i] = CONFIG_WeaponStats[nRow][nCol][i];
 	}
 }
+
+
 
 /*Calc max health and set the cur hp
 	@param pPlayer - Contains the player's health related stats

@@ -99,6 +99,8 @@ void checkTileColor(const int nTile){
 			break;
 		case TILE_UP:
 		case TILE_DOWN:
+		case TILE_UP1:
+		case TILE_DOWN1:
 		case TILE_FAST_TRAVEL:
 			printf(GREEN);
 			break;
@@ -130,9 +132,11 @@ void printTileContent(const int nTile){
 			printf("⨂");
 			break;
 		case TILE_UP:
+		case TILE_UP1:
 			printf("▲");
 			break;
 		case TILE_DOWN:
+		case TILE_DOWN1:
 			printf("▼");
 			break;
 		case TILE_LOCKED_FAST_TRAVEL:

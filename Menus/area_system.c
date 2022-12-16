@@ -139,6 +139,29 @@ void connectFloors(const int nArea, Area* pHead){
 		pTemp->pPrev = pHead + i;
 		pTemp = pTemp->pPrev;
 	}
+
+	//START ASSIGNING SECONDARY ROOMS WHEN VALID
+	if(aSECONARY_DOOR_LINKS[nArea][0] == -1){
+		return;
+	}
+	switch(nArea){
+		case 0:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			break;
+		case 1:
+			//DISCONNECT ALL FLOORS AFTER THE BOSS FLOOR
+			pHead[3].pNext = NULL;
+			pHead[4].pPrev = NULL;
+			//RECONNECT ROOMS WITH SECONDARY DOORS
+			pHead[aSECONARY_DOOR_LINKS[nArea][0]].pNext1 = &(pHead[aSECONARY_DOOR_LINKS[nArea][1]]);	//Link the bot pNext1
+			pHead[aSECONARY_DOOR_LINKS[nArea][1]].pPrev1 = &(pHead[aSECONARY_DOOR_LINKS[nArea][0]]);	//Link the top pPrev1
+			break;
+		default:
+			prompt(102);
+	}
 }
 
 
@@ -152,6 +175,8 @@ void createFloor(const int nArea, const int nFloor, Area* pFloor){
 	//INIT THE FLOOR PROPERTIES
 	pFloor->pPrev = NULL;
 	pFloor->pNext = NULL;
+	pFloor->pPrev1 = NULL;
+	pFloor->pNext1 = NULL;
 	pFloor->nArea = nArea;
 	pFloor->nFloor = nFloor;
 	pFloor->nRow = aROWS[nArea][nFloor];
@@ -237,19 +262,23 @@ void getAreaPlay(Player* pPlayer, const int nAreaChoice/*Area* pHead*/){
 			case QUIT:	
 				nQuit = VALID;
 				break;
+			/*	
 			//DEBUG TOOLS. USED WHEN STUCK IN A FLOOR WITH NO DOOR 
 			case DEBUG_CONTROL_0:
 				changeFloor(&pCurrentFloor, &nPlayerPos, TILE_UP);
 				break;
 			case DEBUG_CONTROL_1:
 				changeFloor(&pCurrentFloor, &nPlayerPos, TILE_DOWN);
-				break;
+				break;*/
 			default:
 				prompt(102);
 		}
 	} while (!nQuit);
 	
 	//RESET THE FLOOR TO THE FIRST FLOOR
+	while(pCurrentFloor->pPrev1 != NULL){
+		pCurrentFloor = pCurrentFloor->pPrev1;
+	}
 	while(pCurrentFloor->pPrev != NULL){
 		pCurrentFloor = pCurrentFloor->pPrev;
 	}
@@ -402,7 +431,9 @@ void interactTile(Area** pFloorAddress, Area *pCurrentFloor, int* pPlayerPos, in
 			}
 			break;
 		case TILE_UP:
+		case TILE_UP1:
 		case TILE_DOWN:
+		case TILE_DOWN1:
 			//CHANGE THE FLOOR
 			changeFloor(pFloorAddress, pPlayerPos, nTileType);
 			break;
@@ -518,6 +549,54 @@ void setBossEnemy(const int nIndex, Enemy* pEnemy){
 	@param nTileType - The door tile type the player interacted
 */
 void changeFloor(Area** pFloorAddress, int* pPlayerPos, const int nTileType){
+	switch(nTileType){
+		case TILE_UP:
+			//NO FLOOR ABOVE
+			if ((*pFloorAddress)->pNext == NULL)
+				{prompt(117); return;}
+
+			//CHANGE TO NEXT FLOOR
+			*pFloorAddress = (*pFloorAddress)->pNext;
+			//REPOSITION PLAYER TO DOOR TILE
+			*pPlayerPos = findTile(*pFloorAddress, TILE_DOWN);
+			break;
+
+
+		case TILE_DOWN:
+			//NO FLOOR BELOW
+			if ((*pFloorAddress)->pPrev == NULL)
+				{prompt(117); return;}
+
+			//CHANGE TO PREV FLOOR
+			*pFloorAddress = (*pFloorAddress)->pPrev;
+			//REPOSITION PLAYER TO DOOR TILE
+			*pPlayerPos = findTile(*pFloorAddress, TILE_UP);
+			break;
+
+
+		case TILE_UP1:
+			if ((*pFloorAddress)->pNext1 == NULL)
+				{prompt(117); return;}
+
+			*pFloorAddress = (*pFloorAddress)->pNext1;
+			*pPlayerPos = findTile(*pFloorAddress, TILE_DOWN1);
+			break;
+
+		case TILE_DOWN1:
+			if ((*pFloorAddress)->pPrev1 == NULL)
+				{prompt(117); return;}
+
+			*pFloorAddress = (*pFloorAddress)->pPrev1;
+			*pPlayerPos = findTile(*pFloorAddress, TILE_UP1);
+			break;
+
+		default:
+			prompt(102);
+	}
+
+
+
+/*
 	if (nTileType == TILE_UP){
 		//NO FLOOR ABOVE
 		if ((*pFloorAddress)->pNext == NULL)
@@ -538,7 +617,7 @@ void changeFloor(Area** pFloorAddress, int* pPlayerPos, const int nTileType){
 		*pFloorAddress = (*pFloorAddress)->pPrev;
 		//REPOSITION PLAYER TO DOOR TILE
 		*pPlayerPos = findTile(*pFloorAddress, TILE_UP);
-	}
+	}*/
 
 	//Change position to an empty if desired up/down tile was not to found
 	if (*pPlayerPos == -1)

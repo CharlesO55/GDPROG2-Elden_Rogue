@@ -10,6 +10,8 @@
 #define TILE_DOWN				5
 #define TILE_LOCKED_FAST_TRAVEL 6
 #define TILE_CREDITS			7
+#define TILE_UP1				8
+#define TILE_DOWN1				9
 
 #define TOTAL_AREAS 6
 

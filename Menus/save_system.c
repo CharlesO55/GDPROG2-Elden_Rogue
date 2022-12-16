@@ -1,6 +1,8 @@
 #include "save_system.h"
 
-
+/*Present save options
+	@param pPlayer - Player to pass
+*/
 void getSaveMenu(Player* pPlayer){
 	int nChoice;
 
@@ -28,6 +30,9 @@ void getSaveMenu(Player* pPlayer){
 }
 
 
+/*Saves the player data when successful
+	@param pPlayer - Player values to save
+*/
 void getSave(Player* pPlayer){
 	printf("\n  Save file will be based off your charcter name.");
 	printf("\n\tPROCEED? 1. YES		0. NO");
@@ -45,15 +50,18 @@ void getSave(Player* pPlayer){
 	strcat(strFileName, pPlayer->strPlayerName);
 	strcat(strFileName, ".dat");
 
+	
+	
 	//IF EXISITNG FILE NAME
-	if (fopen(strFileName, "rb") != 0){
+	fp = fopen(strFileName, "rb");
+	if (fp != 0){
 		printf("\nOVERWRITE EXISTING SAVE FILE?\n\t1. YES      0. NO");
 		scanIntChoice(&nChoice, 0, 1);
 		fclose(fp);
 		if (!nChoice) {return;}
 	}
 
-
+	int i;
 	//PACK
 	int aJobStats[NUMBER_OF_STATS + 1] = { 
 		*(pPlayer->sJob.pStats[0]), 
@@ -73,14 +81,24 @@ void getSave(Player* pPlayer){
 	fwrite(&(pPlayer->aShards), sizeof(int), MAX_SHARDS, fp);
 	fwrite(&(pPlayer->sJob.strJob), sizeof(pPlayer->sJob.strJob), 1, fp);
 	fwrite(&(aJobStats), sizeof(int), 7, fp);
+	fwrite(&(pPlayer->sEquipment.nInventoryUsedSlots), sizeof(int), 1, fp);
+	fwrite(&(pPlayer->sEquipment.nInventoryCapacity), sizeof(int), 1, fp);
+	for (i = 0; i < pPlayer->sEquipment.nInventoryCapacity; i++){
+		fwrite(&(pPlayer->sEquipment.pWeaponInventory[i].nIdentifier), sizeof(int), 1, fp);
+	}
 
 
 	//CLOSE THE FILE
 	fclose(fp);
+	prompt(10);
 }
 
 
-
+/*Load saved data files when possible
+	@param pPlayer - Player values to alter
+	@return INVALID - Unsuccessful
+			VALID - Succesfully loaded character
+*/
 int loadSave(Player* pPlayer){
 	printf("\nEnter save name:");
 	stringMax loadName;
@@ -92,16 +110,18 @@ int loadSave(Player* pPlayer){
 	strcat(strFileName, ".dat");
 
 
+	int i;
 	//FILE FIND
 	FILE *fp;
+
+	//NO FILE FOUND
 	if (fopen(strFileName, "rb") == 0){
-		printf("\nNO MATCHING FILE FOUND");
+		prompt(118);
 		return INVALID;
 	}
+
+	//OPEN
 	fp = fopen(strFileName, "rb");
-
-
-
 
 	//READ
 	fread(&(pPlayer->strPlayerName), sizeof(pPlayer->strPlayerName), 1, fp);
@@ -115,17 +135,27 @@ int loadSave(Player* pPlayer){
 	fread(&(pPlayer->sJob.nStrength), sizeof(int), 1, fp);
 	fread(&(pPlayer->sJob.nIntelligence), sizeof(int), 1, fp);
 	fread(&(pPlayer->sJob.nFaith), sizeof(int), 1, fp);
-
-
+	fread(&(pPlayer->sEquipment.nInventoryUsedSlots), sizeof(int), 1, fp);
+	fread(&(pPlayer->sEquipment.nInventoryCapacity), sizeof(int), 1, fp);
+	pPlayer->sEquipment.pWeaponInventory = malloc(sizeof(Weapon) * pPlayer->sEquipment.nInventoryCapacity);
+	for (i = 0; i < pPlayer->sEquipment.nInventoryCapacity; i++){
+		fread(&(pPlayer->sEquipment.pWeaponInventory[i].nIdentifier), sizeof(int), 1, fp);
+		setWeaponStats(pPlayer->sEquipment.pWeaponInventory+i, pPlayer->sEquipment.pWeaponInventory[i].nIdentifier);
+	}
 
 	//CLOSE
 	fclose(fp);
-	printf("\nSAVE FILE LOADED.");
+
+	prompt(9);
 	return VALID;
 }
 
 
+/*Loads the character from scratch and begins game if successful
+	@param pPlayer - Player to initialized loaded data
+*/
 void getLoadCharacter(Player* pPlayer){
+	//BEGIN GAME WHEN SUCCSEFUL
 	if(loadSave(pPlayer)){
 		repackageStats(pPlayer);
 		prompt(2);

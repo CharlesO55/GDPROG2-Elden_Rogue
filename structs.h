@@ -9,7 +9,7 @@ typedef struct JobTag{
     string10 strJob;    //Job class name
     int nLevel;         //Current level
     int nHealth, nEndurance, nDexterity, nStrength, nIntelligence, nFaith;  //Job stats
-    int* pStats[NUMBER_OF_STATS+1];   //Array of Pointers to the stats. Same as accessing JobClass.nHealth or JobClass->pStats[0]
+    int* pStats[NUMBER_OF_STATS+1];   //Array of Pointers to the stats. Same as accessing JobClass.nHealth or JobClass->pStats[1]
 } JobClass;
 
 
@@ -49,6 +49,8 @@ typedef struct AreaTag{
     string25 strAreaName;   //Name of area
     struct AreaTag* pNext;  //Linking to next floor
     struct AreaTag* pPrev;  //Linking to prev floor
+    struct AreaTag* pNext1; //Other floors
+    struct AreaTag* pPrev1; //Other floors
     int* pTiles;   //Tiles content
 } Area;
 
@@ -62,17 +64,21 @@ typedef struct EnemyTag{
     string25 aSprites[5];
 } Enemy;
 
+
+
+
 //FUNCTIONS
-void setPlayerStats(Player* pPlay, string25 strNewName, int nNewRunes, int aNewShards[MAX_SHARDS], JobClass sNewJob);
+void setPlayerStats(Player* pPlayer, const string25 strNewName, const int nNewRunes, const int aNewShards[MAX_SHARDS], const JobClass sNewJob);
+//void setPlayerStats(Player* pPlay, string25 strNewName, int nNewRunes, int aNewShards[MAX_SHARDS], JobClass sNewJob);
 void resetHealth(Player* pPlayer);
 
 JobClass* getAllJobs();
-    void setJobStats(JobClass *sJob, int nLVL, int nHP, int nEND, int nDEX, int nSTR, int nINT, int nFTH, string10 strJobName);
+    void setJobStats(JobClass *sJob, const int nLVL, const int nHP, const int nEND, const int nDEX, const int nSTR, const int nINT, const int nFTH, const string10 strJobName);
+    //void setJobStats(JobClass *sJob, int nLVL, int nHP, int nEND, int nDEX, int nSTR, int nINT, int nFTH, string10 strJobName);
 
 
 Weapon* getAllWeapons();
     void setWeaponStats(Weapon* pWeapon, const int nIndex);
-
 
 
 #endif

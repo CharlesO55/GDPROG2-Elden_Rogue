@@ -26,8 +26,8 @@ void getTitleScreen(){
 				getCharCreationScreen(&sPlayer);
 				break;
 			case 2:	//Continue
-				getLoadCharacter(&sPlayer);
 				prompt(2);
+				getLoadCharacter(&sPlayer);
 				break;
 			case 0:	//Exit
 				prompt(0);

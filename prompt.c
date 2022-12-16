@@ -34,6 +34,12 @@ void prompt(int nCode){
 		case 8:
 			printf("\n[SYSTEM]: Changed floors!");
 			break;
+		case 9:
+			printf("\n[SYSTEM]: File loaded!");
+			break;
+		case 10:
+			printf("\n[SYSTEM]: File saved!");
+			break;
 		case 100:
 			printf("\n[ERROR]: Enter a valid input.");
 			break;
@@ -87,6 +93,9 @@ void prompt(int nCode){
 			break;
 		case 117:
 			printf("\n[ERROR]: No floor connected.");
+			break;
+		case 118:
+			printf("\n[ERROR]: No matching file found.");
 			break;
 		default:
 			printf("\n[ERROR]: Not in prompt options.");
