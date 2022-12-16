@@ -1,10 +1,10 @@
 Every known bug and cause:
 
-1. [FIXED] Game will crash when freeing pHead of area floors
+1. [semi-FIXED] Game will crash when freeing pHead of area floors. (Still crashes on first startup but works fine on proceeding runs.)
 2. [FIXED] Game will crash when pHead is existing and assigned to a new floor array
 3. Initializing floor arrays can crash. Cause is unknown. (Area 0, 1, & 6 work fine)
 4. [FIXED] Change floors is not persistent. The floor changes in the function but doesn't persist when changeFloors function ends
-5. None of the save/load functions work. Not implemented within time
+5. [IMPLEMENTED] None of the save/load functions work. Not implemented within time
 
 Other stuff
 1. Dodge rate calcultation from MP specs doesn't seem to be correct. Told to randomly generate int from 1-100 but dodge rate calc is a decimal. (Dodge rate will always fail)

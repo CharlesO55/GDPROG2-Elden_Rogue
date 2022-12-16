@@ -11,6 +11,8 @@
 int startBattle(Enemy* pEnemy, Player* pPlayer, Area* pFloor){
 	int nDmg;
 	int nDodged;
+	int i; 
+	int isFlinch[3] = {0,0,0};
 
 	//BATTLE LOOP
 	do {
@@ -21,19 +23,49 @@ int startBattle(Enemy* pEnemy, Player* pPlayer, Area* pFloor){
 		printBattleChoices(nDmg, pPlayer->sEquipment.nPotions);
 		
 		//PLAYER'S MOVE TURN + ATTACK PHASE
-		getPlayerTurn(pPlayer, pEnemy, &nDodged);
+		getPlayerTurn(pPlayer, pEnemy, &nDodged, isFlinch);
 
 		//CHECK IF ENEMY DIED
 		if (isGameOver(pPlayer, pEnemy))
 			{break;}
 		
+		for (i = 0; i < 3; i++){
+			isFlinch[i] -= 1;
+		}
+
+
 
 		//ENEMY'S TURN
-		if (!nDodged){
-			//DAMAGE PLAYER ONLY WHEN NOT DODGING
-			takeDamage(pPlayer, nDmg);	
+		if(isFlinch[0] <= 0 
+			&& isFlinch[1] <= 0 
+			&& isFlinch[2] <= 0 
+			&& pEnemy->nType == BOSS
+			&& generateRNG(1, 5) == 1){
+			
+			int nRNG = generateRNG(0,2);
+			
+			switch(nRNG){
+				case 0:
+					printf("\nENEMY FLINCHED PHYSICAL TYPE");
+					break;
+				case 1:
+					printf("\nENEMY FLINCHED SORCERY TYPE");
+					break;
+				case 2:
+					printf("\nENEMY FLINCHED INCANTATION TYPE");
+					break;
+				default:
+					prompt(102);
+			}
+			isFlinch[nRNG] = 2;
 		}
-		//RESET DODGE IF PLAYER DID DODGE
+		else{
+			if (!nDodged){
+				//DAMAGE PLAYER ONLY WHEN NOT DODGING
+				takeDamage(pPlayer, nDmg);	
+			}
+		}
+			//RESET DODGE IF PLAYER DID DODGE
 		nDodged = INVALID;
 		
 	//CHECK IF PLAYER DIED
@@ -80,7 +112,7 @@ int calcResults(Player* pPlayer, Enemy* pEnemy, const int nArea){
 	@param pEnemy - Enemy stats
 	@param pDodge - Dodge success
 */
-void getPlayerTurn(Player* pPlayer, Enemy* pEnemy, int* pDodged){
+void getPlayerTurn(Player* pPlayer, Enemy* pEnemy, int* pDodged, int isFlinch[3]){
 	int nChoice;
 	int nEndTurn = INVALID;
 	do {
@@ -89,7 +121,7 @@ void getPlayerTurn(Player* pPlayer, Enemy* pEnemy, int* pDodged){
 		//PLAYER CHOICES
 		switch(nChoice){
 			case 1:
-				useAttack(pPlayer, pEnemy);
+				useAttack(pPlayer, pEnemy, isFlinch);
 				nEndTurn = VALID;
 				break;
 			case 2:
@@ -111,7 +143,7 @@ void getPlayerTurn(Player* pPlayer, Enemy* pEnemy, int* pDodged){
 	@param pPlayer - Player stats and weapon
 	@param pEnemy - Enemy health and defense stats
 */
-void useAttack(Player* pPlayer, Enemy* pEnemy){
+void useAttack(Player* pPlayer, Enemy* pEnemy, int isFlinch[3]){
 	int nChoice;
 	int nAtk;
 	printAttackChoices();
@@ -122,6 +154,10 @@ void useAttack(Player* pPlayer, Enemy* pEnemy){
 		case 1: 	//Strength based physical
 		case 2: 	//Intelligence based sorcery
 		case 3:		//Faith based incantation
+			if(isFlinch[nChoice-1] > 0){
+				printf("\nPLAYER IS FLINCHING"); 
+				return; 
+			} 
 			//CALCULATE PLAYER'S ATK FROM WEAPON AND STATS THEN DMG THE ENEMY
 			nAtk = calcAttack(*(pPlayer->sJob.pStats[nChoice + 3]), 
 							  pPlayer->sEquipment.pWeaponInventory->aStats[nChoice + 2], 

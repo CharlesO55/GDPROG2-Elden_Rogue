@@ -53,7 +53,7 @@ int CONFIG_JobStats[TOTAL_CLASSES][NUMBER_OF_STATS + 1] = {
 	//LVL, HP, END, DXT, STR, INT, FTH;
 	{9, 15, 11, 13, /*1000*/14, 9, 9},	//Vagabond
 	{9, 12, 13, 15, 12, 9, 8},	//Samurai
-	{8, 11, 11, 16, 10, 10, 8},	//Warrior
+	{8, 49, 11, 50, /*50*/1000, 10, 8},	//Warrior
 	{7, 14, 12, 9, 16, 7, 8},	//Hero
 	{6, 9, 9, 12, 8, 16, 7},	//Astrologer
 	{7, 10, 8, 10, 11, 7, 16}	//Prophet

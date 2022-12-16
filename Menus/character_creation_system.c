@@ -30,7 +30,7 @@ void getCharCreationScreen(Player* pPlayer){
 			case 3:	//Confirm
 				if ((int)strlen(strTempName) && sTempJob.nLevel){
 					//FINALIZE PLAYER STATS
-					int aEmptyShards[MAX_SHARDS] = {0, 0, 0, 0, 0, 0};
+					int aEmptyShards[MAX_SHARDS] = {1, 1, 0, 0, 1, 0};
 					setPlayerStats(pPlayer, strTempName, STARTER_RUNES, aEmptyShards, sTempJob);
 					repackageStats(pPlayer);
 					resetHealth(pPlayer);

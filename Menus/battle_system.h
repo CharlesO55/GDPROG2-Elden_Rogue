@@ -4,9 +4,11 @@
 
 int startBattle(Enemy* pEnemy, Player* pPlayer, Area* pFloor);
 	int calcDamage(const Enemy* pEnemy, const int nArea);
-		void getPlayerTurn(Player* pPlayer, Enemy* pEnemy, int* pDodged);
+		void getPlayerTurn(Player* pPlayer, Enemy* pEnemy, int* pDodged, int isFlinch[3]);
+		//void getPlayerTurn(Player* pPlayer, Enemy* pEnemy, int* pDodged);
 			void printAttackChoices();
-			void useAttack(Player* pPlayer, Enemy* pEnemy);
+			void useAttack(Player* pPlayer, Enemy* pEnemy, int isFlinch[3]);
+			//void useAttack(Player* pPlayer, Enemy* pEnemy);
 				int calcAttack(const int nPlayerStat, const int nWeaponStat, const float fEnemyDefense);
 					void damageEnemy(Enemy* pEnemy, const int nAtk);
 			int useDodge(const Player* pPlayer);
